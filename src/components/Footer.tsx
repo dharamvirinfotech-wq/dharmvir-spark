@@ -18,10 +18,10 @@ const Footer = () => {
               Services
             </h4>
             <ul className="space-y-2.5 text-sm text-primary-foreground/60">
-              <li><a href="#services" className="hover:text-accent transition-colors">Web Development</a></li>
-              <li><a href="#services" className="hover:text-accent transition-colors">Mobile Apps</a></li>
-              <li><a href="#services" className="hover:text-accent transition-colors">AI & ML Solutions</a></li>
-              <li><a href="#services" className="hover:text-accent transition-colors">E-commerce</a></li>
+              <li><a href="/services" className="hover:text-accent transition-colors">Web Development</a></li>
+              <li><a href="/services" className="hover:text-accent transition-colors">Mobile Apps</a></li>
+              <li><a href="/services" className="hover:text-accent transition-colors">AI & ML Solutions</a></li>
+              <li><a href="/services" className="hover:text-accent transition-colors">E-commerce</a></li>
             </ul>
           </div>
 
@@ -30,10 +30,10 @@ const Footer = () => {
               Company
             </h4>
             <ul className="space-y-2.5 text-sm text-primary-foreground/60">
-              <li><a href="#about" className="hover:text-accent transition-colors">About Us</a></li>
-              <li><a href="#portfolio" className="hover:text-accent transition-colors">Portfolio</a></li>
-              <li><a href="#contact" className="hover:text-accent transition-colors">Contact</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">Careers</a></li>
+              <li><a href="/about" className="hover:text-accent transition-colors">About Us</a></li>
+              <li><a href="/portfolio" className="hover:text-accent transition-colors">Portfolio</a></li>
+              <li><a href="/contact" className="hover:text-accent transition-colors">Contact</a></li>
+              <li><a href="/technologies" className="hover:text-accent transition-colors">Technologies</a></li>
             </ul>
           </div>
 
