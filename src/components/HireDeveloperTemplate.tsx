@@ -3,10 +3,21 @@ import Navbar from "@/components/Navbar";
 import PageBanner from "@/components/PageBanner";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
-import { CheckCircle, Clock, DollarSign, Shield, Users, Zap, type LucideIcon } from "lucide-react";
+import { CheckCircle, Clock, DollarSign, Shield, Users, Zap, Star, MapPin, Briefcase, type LucideIcon } from "lucide-react";
 
 interface Skill {
   name: string;
+}
+
+interface DeveloperProfile {
+  name: string;
+  role: string;
+  experience: string;
+  hourlyRate: string;
+  rating: number;
+  location: string;
+  avatar: string;
+  skills: string[];
 }
 
 interface HireDeveloperTemplateProps {
@@ -17,6 +28,7 @@ interface HireDeveloperTemplateProps {
   skills: Skill[];
   benefits?: { icon: LucideIcon; title: string; desc: string }[];
   whyHire: string[];
+  developers?: DeveloperProfile[];
 }
 
 const defaultBenefits = [
