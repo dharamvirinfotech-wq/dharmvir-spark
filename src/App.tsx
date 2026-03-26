@@ -49,6 +49,21 @@ import HireBlockchain from "./pages/hire/HireBlockchain.tsx";
 import HireWordpress from "./pages/hire/HireWordpress.tsx";
 import HireShopify from "./pages/hire/HireShopify.tsx";
 import HireMagento from "./pages/hire/HireMagento.tsx";
+import HireLaravel from "./pages/hire/HireLaravel.tsx";
+import HireDjango from "./pages/hire/HireDjango.tsx";
+import HireGolang from "./pages/hire/HireGolang.tsx";
+import HireRubyOnRails from "./pages/hire/HireRubyOnRails.tsx";
+import HireSwift from "./pages/hire/HireSwift.tsx";
+import HireKotlin from "./pages/hire/HireKotlin.tsx";
+import HireGraphql from "./pages/hire/HireGraphql.tsx";
+import HireAws from "./pages/hire/HireAws.tsx";
+import HireMeanStack from "./pages/hire/HireMeanStack.tsx";
+import HireUiUx from "./pages/hire/HireUiUx.tsx";
+import HireQa from "./pages/hire/HireQa.tsx";
+import HireSalesforce from "./pages/hire/HireSalesforce.tsx";
+import HirePowerBi from "./pages/hire/HirePowerBi.tsx";
+import HireRust from "./pages/hire/HireRust.tsx";
+import HireGameDev from "./pages/hire/HireGameDev.tsx";
 import DeveloperProfile from "./pages/DeveloperProfile.tsx";
 const queryClient = new QueryClient();
 
@@ -104,6 +119,21 @@ const App = () => (
           <Route path="/hire-developer/wordpress" element={<HireWordpress />} />
           <Route path="/hire-developer/shopify" element={<HireShopify />} />
           <Route path="/hire-developer/magento" element={<HireMagento />} />
+          <Route path="/hire-developer/laravel" element={<HireLaravel />} />
+          <Route path="/hire-developer/django" element={<HireDjango />} />
+          <Route path="/hire-developer/golang" element={<HireGolang />} />
+          <Route path="/hire-developer/ruby-on-rails" element={<HireRubyOnRails />} />
+          <Route path="/hire-developer/swift" element={<HireSwift />} />
+          <Route path="/hire-developer/kotlin" element={<HireKotlin />} />
+          <Route path="/hire-developer/graphql" element={<HireGraphql />} />
+          <Route path="/hire-developer/aws" element={<HireAws />} />
+          <Route path="/hire-developer/mean-stack" element={<HireMeanStack />} />
+          <Route path="/hire-developer/ui-ux" element={<HireUiUx />} />
+          <Route path="/hire-developer/qa" element={<HireQa />} />
+          <Route path="/hire-developer/salesforce" element={<HireSalesforce />} />
+          <Route path="/hire-developer/power-bi" element={<HirePowerBi />} />
+          <Route path="/hire-developer/rust" element={<HireRust />} />
+          <Route path="/hire-developer/game-developer" element={<HireGameDev />} />
           <Route path="/developer/:slug" element={<DeveloperProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

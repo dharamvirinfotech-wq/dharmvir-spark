@@ -80,6 +80,12 @@ export const hireCategories: HireCategory[] = [
       { name: "Hire PHP Developer", href: "/hire-developer/php" },
       { name: "Hire Java Developer", href: "/hire-developer/java" },
       { name: "Hire .NET Developer", href: "/hire-developer/dotnet" },
+      { name: "Hire Laravel Developer", href: "/hire-developer/laravel" },
+      { name: "Hire Django Developer", href: "/hire-developer/django" },
+      { name: "Hire Ruby on Rails Developer", href: "/hire-developer/ruby-on-rails" },
+      { name: "Hire Go Developer", href: "/hire-developer/golang" },
+      { name: "Hire Rust Developer", href: "/hire-developer/rust" },
+      { name: "Hire GraphQL Developer", href: "/hire-developer/graphql" },
     ],
   },
   {
@@ -89,6 +95,8 @@ export const hireCategories: HireCategory[] = [
       { name: "Hire Flutter Developer", href: "/hire-developer/flutter" },
       { name: "Hire iOS Developer", href: "/hire-developer/ios" },
       { name: "Hire Android Developer", href: "/hire-developer/android" },
+      { name: "Hire Swift Developer", href: "/hire-developer/swift" },
+      { name: "Hire Kotlin Developer", href: "/hire-developer/kotlin" },
     ],
   },
   {
@@ -96,16 +104,20 @@ export const hireCategories: HireCategory[] = [
     technologies: [
       { name: "Hire Full Stack Developer", href: "/hire-developer/fullstack" },
       { name: "Hire MERN Stack Developer", href: "/hire-developer/mern" },
+      { name: "Hire MEAN Stack Developer", href: "/hire-developer/mean-stack" },
       { name: "Hire DevOps Engineer", href: "/hire-developer/devops" },
       { name: "Hire Cloud Architect", href: "/hire-developer/cloud-architect" },
+      { name: "Hire AWS Developer", href: "/hire-developer/aws" },
     ],
   },
   {
-    label: "AI & Data",
+    label: "AI, Data & Emerging",
     technologies: [
       { name: "Hire AI/ML Engineer", href: "/hire-developer/ai-ml" },
       { name: "Hire Data Scientist", href: "/hire-developer/data-scientist" },
       { name: "Hire Blockchain Developer", href: "/hire-developer/blockchain" },
+      { name: "Hire Power BI Developer", href: "/hire-developer/power-bi" },
+      { name: "Hire Game Developer", href: "/hire-developer/game-developer" },
     ],
   },
   {
@@ -114,6 +126,14 @@ export const hireCategories: HireCategory[] = [
       { name: "Hire WordPress Developer", href: "/hire-developer/wordpress" },
       { name: "Hire Shopify Developer", href: "/hire-developer/shopify" },
       { name: "Hire Magento Developer", href: "/hire-developer/magento" },
+      { name: "Hire Salesforce Developer", href: "/hire-developer/salesforce" },
+    ],
+  },
+  {
+    label: "Design & QA",
+    technologies: [
+      { name: "Hire UI/UX Designer", href: "/hire-developer/ui-ux" },
+      { name: "Hire QA Engineer", href: "/hire-developer/qa" },
     ],
   },
 ];
