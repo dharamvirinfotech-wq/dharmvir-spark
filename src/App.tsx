@@ -65,6 +65,29 @@ import HirePowerBi from "./pages/hire/HirePowerBi.tsx";
 import HireRust from "./pages/hire/HireRust.tsx";
 import HireGameDev from "./pages/hire/HireGameDev.tsx";
 import DeveloperProfile from "./pages/DeveloperProfile.tsx";
+import Promotion from "./pages/Promotion.tsx";
+import SeoServices from "./pages/promotion/SeoServices.tsx";
+import OnPageSeo from "./pages/promotion/OnPageSeo.tsx";
+import OrganicSeo from "./pages/promotion/OrganicSeo.tsx";
+import OffPageSeo from "./pages/promotion/OffPageSeo.tsx";
+import LinkBuilding from "./pages/promotion/LinkBuilding.tsx";
+import DigitalPr from "./pages/promotion/DigitalPr.tsx";
+import EcommerceSeo from "./pages/promotion/EcommerceSeo.tsx";
+import LocalSeo from "./pages/promotion/LocalSeo.tsx";
+import TechnicalSeo from "./pages/promotion/TechnicalSeo.tsx";
+import PpcManagement from "./pages/promotion/PpcManagement.tsx";
+import SocialMediaMarketing from "./pages/promotion/SocialMediaMarketing.tsx";
+import ContentMarketing from "./pages/promotion/ContentMarketing.tsx";
+import EmailMarketing from "./pages/promotion/EmailMarketing.tsx";
+import InfluencerMarketing from "./pages/promotion/InfluencerMarketing.tsx";
+import VideoMarketing from "./pages/promotion/VideoMarketing.tsx";
+import AffiliateMarketing from "./pages/promotion/AffiliateMarketing.tsx";
+import AiContentGeneration from "./pages/promotion/AiContentGeneration.tsx";
+import AiAnalytics from "./pages/promotion/AiAnalytics.tsx";
+import ChatbotMarketing from "./pages/promotion/ChatbotMarketing.tsx";
+import PredictiveMarketing from "./pages/promotion/PredictiveMarketing.tsx";
+import AiAdOptimization from "./pages/promotion/AiAdOptimization.tsx";
+import AiEmailAutomation from "./pages/promotion/AiEmailAutomation.tsx";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -135,6 +158,29 @@ const App = () => (
           <Route path="/hire-developer/rust" element={<HireRust />} />
           <Route path="/hire-developer/game-developer" element={<HireGameDev />} />
           <Route path="/developer/:slug" element={<DeveloperProfile />} />
+          <Route path="/promotion" element={<Promotion />} />
+          <Route path="/promotion/seo-services" element={<SeoServices />} />
+          <Route path="/promotion/on-page-seo" element={<OnPageSeo />} />
+          <Route path="/promotion/organic-seo" element={<OrganicSeo />} />
+          <Route path="/promotion/off-page-seo" element={<OffPageSeo />} />
+          <Route path="/promotion/link-building" element={<LinkBuilding />} />
+          <Route path="/promotion/digital-pr" element={<DigitalPr />} />
+          <Route path="/promotion/ecommerce-seo" element={<EcommerceSeo />} />
+          <Route path="/promotion/local-seo" element={<LocalSeo />} />
+          <Route path="/promotion/technical-seo" element={<TechnicalSeo />} />
+          <Route path="/promotion/ppc-management" element={<PpcManagement />} />
+          <Route path="/promotion/social-media-marketing" element={<SocialMediaMarketing />} />
+          <Route path="/promotion/content-marketing" element={<ContentMarketing />} />
+          <Route path="/promotion/email-marketing" element={<EmailMarketing />} />
+          <Route path="/promotion/influencer-marketing" element={<InfluencerMarketing />} />
+          <Route path="/promotion/video-marketing" element={<VideoMarketing />} />
+          <Route path="/promotion/affiliate-marketing" element={<AffiliateMarketing />} />
+          <Route path="/promotion/ai-content-generation" element={<AiContentGeneration />} />
+          <Route path="/promotion/ai-analytics" element={<AiAnalytics />} />
+          <Route path="/promotion/chatbot-marketing" element={<ChatbotMarketing />} />
+          <Route path="/promotion/predictive-marketing" element={<PredictiveMarketing />} />
+          <Route path="/promotion/ai-ad-optimization" element={<AiAdOptimization />} />
+          <Route path="/promotion/ai-email-automation" element={<AiEmailAutomation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
