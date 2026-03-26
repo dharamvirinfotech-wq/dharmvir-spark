@@ -3,10 +3,21 @@ import Navbar from "@/components/Navbar";
 import PageBanner from "@/components/PageBanner";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
-import { CheckCircle, Clock, DollarSign, Shield, Users, Zap, type LucideIcon } from "lucide-react";
+import { CheckCircle, Clock, DollarSign, Shield, Users, Zap, Star, MapPin, Briefcase, type LucideIcon } from "lucide-react";
 
 interface Skill {
   name: string;
+}
+
+interface DeveloperProfile {
+  name: string;
+  role: string;
+  experience: string;
+  hourlyRate: string;
+  rating: number;
+  location: string;
+  avatar: string;
+  skills: string[];
 }
 
 interface HireDeveloperTemplateProps {
@@ -17,6 +28,7 @@ interface HireDeveloperTemplateProps {
   skills: Skill[];
   benefits?: { icon: LucideIcon; title: string; desc: string }[];
   whyHire: string[];
+  developers?: DeveloperProfile[];
 }
 
 const defaultBenefits = [
@@ -35,6 +47,15 @@ const hiringProcess = [
   { step: "04", title: "Manage & Scale", desc: "Scale your team up or down based on project needs." },
 ];
 
+const generateDefaultDevelopers = (role: string): DeveloperProfile[] => [
+  { name: "Rahul Sharma", role, experience: "8+ Years", hourlyRate: "$25-35", rating: 4.9, location: "Bangalore, India", avatar: "RS", skills: ["Team Lead", "Architecture", "Mentoring"] },
+  { name: "Priya Patel", role, experience: "6+ Years", hourlyRate: "$20-30", rating: 4.8, location: "Pune, India", avatar: "PP", skills: ["UI/UX", "Performance", "Testing"] },
+  { name: "Amit Kumar", role, experience: "5+ Years", hourlyRate: "$18-25", rating: 4.7, location: "Hyderabad, India", avatar: "AK", skills: ["API Design", "Database", "Security"] },
+  { name: "Sneha Reddy", role, experience: "7+ Years", hourlyRate: "$22-32", rating: 4.9, location: "Chennai, India", avatar: "SR", skills: ["Full Stack", "DevOps", "Agile"] },
+  { name: "Vikram Singh", role, experience: "4+ Years", hourlyRate: "$15-22", rating: 4.6, location: "Noida, India", avatar: "VS", skills: ["Frontend", "Mobile", "CI/CD"] },
+  { name: "Ananya Gupta", role, experience: "9+ Years", hourlyRate: "$28-40", rating: 5.0, location: "Mumbai, India", avatar: "AG", skills: ["Enterprise", "Cloud", "Strategy"] },
+];
+
 const HireDeveloperTemplate = ({
   title,
   subtitle,
@@ -43,7 +64,12 @@ const HireDeveloperTemplate = ({
   skills,
   benefits = defaultBenefits,
   whyHire,
-}: HireDeveloperTemplateProps) => (
+  developers,
+}: HireDeveloperTemplateProps) => {
+  const roleLabel = title.replace("Hire ", "");
+  const devProfiles = developers || generateDefaultDevelopers(roleLabel);
+
+  return (
   <div className="min-h-screen bg-background">
     <Navbar />
     <PageBanner title={title} subtitle={subtitle} breadcrumb={breadcrumb} />
@@ -66,8 +92,60 @@ const HireDeveloperTemplate = ({
       </div>
     </section>
 
-    {/* Skills */}
+    {/* Developer Profiles Gallery */}
     <section className="py-16 bg-muted/30">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-primary text-center mb-4">Meet Our {roleLabel}s</h2>
+        <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">Pre-vetted, experienced developers ready to join your team immediately.</p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {devProfiles.map((dev) => (
+            <div key={dev.name} className="bg-card border border-border rounded-xl p-6 hover:shadow-xl transition-all hover:-translate-y-1 group">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-16 h-16 rounded-full bg-accent/10 border-2 border-accent flex items-center justify-center text-xl font-bold text-accent">
+                  {dev.avatar}
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-primary text-lg">{dev.name}</h3>
+                  <p className="text-muted-foreground text-sm">{dev.role}</p>
+                </div>
+              </div>
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Briefcase size={14} className="text-accent" />
+                    <span>{dev.experience}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                    <span className="text-sm font-semibold text-foreground">{dev.rating}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin size={14} className="text-accent" />
+                  <span>{dev.location}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <DollarSign size={14} className="text-accent" />
+                  <span className="text-lg font-bold text-primary">{dev.hourlyRate}</span>
+                  <span className="text-xs text-muted-foreground">/ hour</span>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 mb-5">
+                {dev.skills.map((s) => (
+                  <span key={s} className="text-xs bg-accent/10 text-accent px-2.5 py-1 rounded-full font-medium">{s}</span>
+                ))}
+              </div>
+              <Link to="/contact" className="block w-full text-center bg-accent text-accent-foreground py-2.5 rounded-lg font-semibold text-sm hover:bg-accent/90 transition-colors">
+                Hire {dev.name.split(" ")[0]}
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* Skills */}
+    <section className="py-16">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-primary text-center mb-4">Core Skills & Expertise</h2>
         <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">Our developers are proficient in a wide range of tools and technologies.</p>
@@ -82,7 +160,7 @@ const HireDeveloperTemplate = ({
     </section>
 
     {/* Benefits */}
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 bg-muted/30">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-primary text-center mb-4">Benefits of Hiring From India</h2>
         <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">Access top-tier Indian developers at competitive rates with no compromise on quality.</p>
@@ -101,7 +179,7 @@ const HireDeveloperTemplate = ({
     </section>
 
     {/* Hiring Process */}
-    <section className="py-16 bg-muted/30">
+    <section className="py-16">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-primary text-center mb-12">Simple Hiring Process</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
@@ -136,6 +214,7 @@ const HireDeveloperTemplate = ({
 
     <Footer />
   </div>
-);
+  );
+};
 
 export default HireDeveloperTemplate;
