@@ -10,6 +10,9 @@ import {
   Cloud,
   Blocks,
   Shield,
+  Search,
+  Megaphone,
+  Bot,
   type LucideIcon,
 } from "lucide-react";
 
@@ -37,8 +40,55 @@ export const navLinks: NavLink[] = [
   { label: "Services", href: "/services", hasMega: "services" },
   { label: "Technologies", href: "/technologies", hasMega: "technologies" },
   { label: "Hire Developer", href: "/hire-developer", hasMega: "hire" },
+  { label: "Promotion", href: "/promotion", hasMega: "promotion" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Contact", href: "/contact" },
+];
+
+export const megaPromotion: MegaItem[] = [
+  { icon: Search, title: "SEO Services", desc: "Boost rankings & organic traffic", href: "/promotion/seo" },
+  { icon: Megaphone, title: "Digital Marketing", desc: "Full-spectrum digital growth strategies", href: "/promotion/digital-marketing" },
+  { icon: Bot, title: "AI Marketing Agency", desc: "AI-powered marketing automation", href: "/promotion/ai-marketing" },
+];
+
+export const promotionCategories: HireCategory[] = [
+  {
+    label: "SEO Services",
+    technologies: [
+      { name: "SEO Services", href: "/promotion/seo-services" },
+      { name: "On-Page SEO Services", href: "/promotion/on-page-seo" },
+      { name: "Organic SEO Services", href: "/promotion/organic-seo" },
+      { name: "Off-Page SEO Services", href: "/promotion/off-page-seo" },
+      { name: "Link Building Services", href: "/promotion/link-building" },
+      { name: "Digital PR Services", href: "/promotion/digital-pr" },
+      { name: "Ecommerce SEO Services", href: "/promotion/ecommerce-seo" },
+      { name: "Local SEO Services", href: "/promotion/local-seo" },
+      { name: "Technical SEO Services", href: "/promotion/technical-seo" },
+    ],
+  },
+  {
+    label: "Digital Marketing",
+    technologies: [
+      { name: "PPC Management", href: "/promotion/ppc-management" },
+      { name: "Social Media Marketing", href: "/promotion/social-media-marketing" },
+      { name: "Content Marketing", href: "/promotion/content-marketing" },
+      { name: "Email Marketing", href: "/promotion/email-marketing" },
+      { name: "Influencer Marketing", href: "/promotion/influencer-marketing" },
+      { name: "Video Marketing", href: "/promotion/video-marketing" },
+      { name: "Affiliate Marketing", href: "/promotion/affiliate-marketing" },
+    ],
+  },
+  {
+    label: "AI Marketing Agency",
+    technologies: [
+      { name: "AI Content Generation", href: "/promotion/ai-content-generation" },
+      { name: "AI Analytics & Insights", href: "/promotion/ai-analytics" },
+      { name: "Chatbot Marketing", href: "/promotion/chatbot-marketing" },
+      { name: "Predictive Marketing", href: "/promotion/predictive-marketing" },
+      { name: "AI Ad Optimization", href: "/promotion/ai-ad-optimization" },
+      { name: "AI Email Automation", href: "/promotion/ai-email-automation" },
+    ],
+  },
 ];
 
 export const megaServices: MegaItem[] = [
