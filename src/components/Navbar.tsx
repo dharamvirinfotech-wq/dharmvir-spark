@@ -222,7 +222,7 @@ const Navbar = () => {
 
                   {/* Mega Menu */}
                   <div
-                    className={`absolute top-full ${link.hasMega === "hire" ? "right-0" : "left-1/2 -translate-x-1/2"} pt-4 transition-all duration-200 ${
+                    className={`absolute top-full ${(link.hasMega === "hire" || link.hasMega === "promotion") ? "right-0" : "left-1/2 -translate-x-1/2"} pt-4 transition-all duration-200 ${
                       activeMega === link.hasMega
                         ? "opacity-100 visible translate-y-0"
                         : "opacity-0 invisible -translate-y-2"
@@ -288,8 +288,8 @@ const Navbar = () => {
                   </button>
                   {mobileExpanded === link.hasMega && (
                     <div className="pl-4 py-2 space-y-1 border-b border-border">
-                      {link.hasMega === "hire"
-                        ? hireCategories.map((cat) => (
+                      {(link.hasMega === "hire" || link.hasMega === "promotion")
+                        ? (link.hasMega === "hire" ? hireCategories : promotionCategories).map((cat) => (
                             <div key={cat.label} className="mb-3">
                               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5 px-2">
                                 {cat.label}
