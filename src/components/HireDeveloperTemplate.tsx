@@ -15,7 +15,7 @@ interface HireDeveloperTemplateProps {
   breadcrumb: string;
   description: string;
   skills: Skill[];
-  benefits: { icon: LucideIcon; title: string; desc: string }[];
+  benefits?: { icon: LucideIcon; title: string; desc: string }[];
   whyHire: string[];
 }
 
