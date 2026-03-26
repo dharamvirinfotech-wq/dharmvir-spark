@@ -47,6 +47,14 @@ const App = () => (
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/technologies" element={<Technologies />} />
+          <Route path="/technologies/frontend" element={<Frontend />} />
+          <Route path="/technologies/backend" element={<Backend />} />
+          <Route path="/technologies/mobile" element={<Mobile />} />
+          <Route path="/technologies/database" element={<DatabaseStorage />} />
+          <Route path="/technologies/cloud" element={<CloudDevops />} />
+          <Route path="/technologies/ai" element={<AiMl />} />
+          <Route path="/technologies/cms" element={<CmsEcommerce />} />
+          <Route path="/technologies/security" element={<SecurityTesting />} />
           <Route path="/hire-developer" element={<HireDeveloper />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
