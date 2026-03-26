@@ -13,6 +13,12 @@ import {
   megaServices,
   megaTechnologies,
   hireCategories,
+import {
+  navLinks,
+  megaServices,
+  megaTechnologies,
+  hireCategories,
+  promotionCategories,
 } from "@/data/navigation";
 
 const Navbar = () => {
@@ -21,6 +27,7 @@ const Navbar = () => {
   const [activeMega, setActiveMega] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [activeHireCategory, setActiveHireCategory] = useState(0);
+  const [activePromoCategory, setActivePromoCategory] = useState(0);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -89,21 +96,20 @@ const Navbar = () => {
     </div>
   );
 
-  const renderHireMega = () => (
+  const renderCategoryMega = (categories: typeof hireCategories, activeCat: number, setActiveCat: (idx: number) => void, viewAllHref: string, viewAllLabel: string) => (
     <div className="w-[780px] bg-background rounded-xl shadow-2xl border border-border overflow-hidden">
       <div className="flex">
-        {/* Left: Categories */}
         <div className="w-[240px] bg-muted/50 border-r border-border p-4">
           <h3 className="font-display font-bold text-primary text-xs uppercase tracking-wider mb-4">
-            Hire By Category
+            Browse Categories
           </h3>
           <div className="space-y-1">
-            {hireCategories.map((cat, idx) => (
+            {categories.map((cat, idx) => (
               <button
                 key={cat.label}
-                onMouseEnter={() => setActiveHireCategory(idx)}
+                onMouseEnter={() => setActiveCat(idx)}
                 className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  activeHireCategory === idx
+                  activeCat === idx
                     ? "bg-accent text-accent-foreground"
                     : "text-foreground hover:bg-muted"
                 }`}
@@ -113,22 +119,20 @@ const Navbar = () => {
             ))}
           </div>
         </div>
-
-        {/* Right: Subcategories */}
         <div className="flex-1 p-5">
           <div className="flex items-center justify-between mb-4">
             <h4 className="font-display font-bold text-primary text-sm">
-              {hireCategories[activeHireCategory]?.label}
+              {categories[activeCat]?.label}
             </h4>
             <Link
-              to="/hire-developer"
+              to={viewAllHref}
               className="text-xs font-semibold text-accent hover:underline inline-flex items-center gap-1"
             >
               View All <ArrowRight size={12} />
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            {hireCategories[activeHireCategory]?.technologies.map((tech) => (
+            {categories[activeCat]?.technologies.map((tech) => (
               <Link
                 key={tech.name}
                 to={tech.href}
@@ -230,7 +234,9 @@ const Navbar = () => {
                     }`}
                   >
                     {link.hasMega === "hire"
-                      ? renderHireMega()
+                      ? renderCategoryMega(hireCategories, activeHireCategory, setActiveHireCategory, "/hire-developer", "Hire Developers")
+                      : link.hasMega === "promotion"
+                      ? renderCategoryMega(promotionCategories, activePromoCategory, setActivePromoCategory, "/promotion", "Promotion Services")
                       : renderGridMega(link.hasMega!)}
                   </div>
                 </div>
