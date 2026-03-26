@@ -1,5 +1,5 @@
 import PromotionServiceTemplate from "@/components/PromotionServiceTemplate";
-import { BarChart3, Target, BarChart3, Settings, Users, Shield } from "lucide-react";
+import { BarChart3, Target, Settings, Users, Shield } from "lucide-react";
 
 const AiAnalytics = () => (
   <PromotionServiceTemplate

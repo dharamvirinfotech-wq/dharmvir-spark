@@ -1,5 +1,5 @@
 import PromotionServiceTemplate from "@/components/PromotionServiceTemplate";
-import { Users, Target, BarChart3, Settings, Users, Shield } from "lucide-react";
+import { Users, Target, BarChart3, Settings, Shield } from "lucide-react";
 
 const InfluencerMarketing = () => (
   <PromotionServiceTemplate

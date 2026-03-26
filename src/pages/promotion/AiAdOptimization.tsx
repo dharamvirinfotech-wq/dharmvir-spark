@@ -1,5 +1,5 @@
 import PromotionServiceTemplate from "@/components/PromotionServiceTemplate";
-import { Target, Target, BarChart3, Settings, Users, Shield } from "lucide-react";
+import { Target, BarChart3, Settings, Users, Shield } from "lucide-react";
 
 const AiAdOptimization = () => (
   <PromotionServiceTemplate

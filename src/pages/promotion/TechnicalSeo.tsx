@@ -1,5 +1,5 @@
 import PromotionServiceTemplate from "@/components/PromotionServiceTemplate";
-import { Settings, Target, BarChart3, Settings, Users, Shield } from "lucide-react";
+import { Settings, Target, BarChart3, Users, Shield } from "lucide-react";
 
 const TechnicalSeo = () => (
   <PromotionServiceTemplate
