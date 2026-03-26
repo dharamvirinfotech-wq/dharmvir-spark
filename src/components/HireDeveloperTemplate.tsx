@@ -47,6 +47,15 @@ const hiringProcess = [
   { step: "04", title: "Manage & Scale", desc: "Scale your team up or down based on project needs." },
 ];
 
+const generateDefaultDevelopers = (role: string): DeveloperProfile[] => [
+  { name: "Rahul Sharma", role, experience: "8+ Years", hourlyRate: "$25-35", rating: 4.9, location: "Bangalore, India", avatar: "RS", skills: ["Team Lead", "Architecture", "Mentoring"] },
+  { name: "Priya Patel", role, experience: "6+ Years", hourlyRate: "$20-30", rating: 4.8, location: "Pune, India", avatar: "PP", skills: ["UI/UX", "Performance", "Testing"] },
+  { name: "Amit Kumar", role, experience: "5+ Years", hourlyRate: "$18-25", rating: 4.7, location: "Hyderabad, India", avatar: "AK", skills: ["API Design", "Database", "Security"] },
+  { name: "Sneha Reddy", role, experience: "7+ Years", hourlyRate: "$22-32", rating: 4.9, location: "Chennai, India", avatar: "SR", skills: ["Full Stack", "DevOps", "Agile"] },
+  { name: "Vikram Singh", role, experience: "4+ Years", hourlyRate: "$15-22", rating: 4.6, location: "Noida, India", avatar: "VS", skills: ["Frontend", "Mobile", "CI/CD"] },
+  { name: "Ananya Gupta", role, experience: "9+ Years", hourlyRate: "$28-40", rating: 5.0, location: "Mumbai, India", avatar: "AG", skills: ["Enterprise", "Cloud", "Strategy"] },
+];
+
 const HireDeveloperTemplate = ({
   title,
   subtitle,
@@ -55,7 +64,12 @@ const HireDeveloperTemplate = ({
   skills,
   benefits = defaultBenefits,
   whyHire,
-}: HireDeveloperTemplateProps) => (
+  developers,
+}: HireDeveloperTemplateProps) => {
+  const roleLabel = title.replace("Hire ", "");
+  const devProfiles = developers || generateDefaultDevelopers(roleLabel);
+
+  return (
   <div className="min-h-screen bg-background">
     <Navbar />
     <PageBanner title={title} subtitle={subtitle} breadcrumb={breadcrumb} />
