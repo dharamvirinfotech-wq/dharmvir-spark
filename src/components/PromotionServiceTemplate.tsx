@@ -11,16 +11,16 @@ type Feature = { icon: LucideIcon; title: string; desc: string };
 type Props = {
   title: string;
   subtitle: string;
-  breadcrumbs: { label: string; href: string }[];
+  breadcrumb: string;
   features: Feature[];
   benefits: string[];
   process: { step: string; title: string; desc: string }[];
 };
 
-const PromotionServiceTemplate = ({ title, subtitle, breadcrumbs, features, benefits, process }: Props) => (
+const PromotionServiceTemplate = ({ title, subtitle, breadcrumb, features, benefits, process }: Props) => (
   <div className="min-h-screen bg-background">
     <Navbar />
-    <PageBanner title={title} subtitle={subtitle} breadcrumbs={breadcrumbs} />
+    <PageBanner title={title} subtitle={subtitle} breadcrumb={breadcrumb} />
 
     {/* Features */}
     <section className="py-16">

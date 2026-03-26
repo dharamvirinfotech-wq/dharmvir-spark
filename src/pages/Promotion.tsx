@@ -15,7 +15,7 @@ const Promotion = () => (
     <PageBanner
       title="Promotion & Marketing Services"
       subtitle="Comprehensive digital marketing, SEO, and AI-powered marketing solutions to accelerate your business growth."
-      breadcrumbs={[{ label: "Home", href: "/" }, { label: "Promotion", href: "/promotion" }]}
+      breadcrumb="Promotion"
     />
 
     <section className="py-16">
