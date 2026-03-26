@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   Phone,
   Mail,
@@ -48,18 +49,18 @@ const Navbar = () => {
         <h3 className="font-display font-bold text-primary text-sm uppercase tracking-wider">
           {getMegaTitle(megaKey)}
         </h3>
-        <a
-          href={navLinks.find((l) => l.hasMega === megaKey)?.href || "/"}
+        <Link
+          to={navLinks.find((l) => l.hasMega === megaKey)?.href || "/"}
           className="text-xs font-semibold text-accent hover:underline inline-flex items-center gap-1"
         >
           View All <ArrowRight size={12} />
-        </a>
+        </Link>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {getMegaItems(megaKey).map((item) => (
-          <a
+          <Link
             key={item.title}
-            href={item.href}
+            to={item.href}
             className="group flex items-start gap-3 p-3 rounded-lg hover:bg-muted transition-colors"
           >
             <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/20 transition-colors">
@@ -73,17 +74,17 @@ const Navbar = () => {
                 {item.desc}
               </p>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
       <div className="mt-5 pt-4 border-t border-border flex items-center justify-between">
         <p className="text-xs text-muted-foreground">Need a custom solution?</p>
-        <a
-          href="/contact"
+        <Link
+          to="/contact"
           className="text-xs font-semibold bg-accent text-accent-foreground px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors"
         >
           Talk To Experts
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -119,18 +120,18 @@ const Navbar = () => {
             <h4 className="font-display font-bold text-primary text-sm">
               {hireCategories[activeHireCategory]?.label}
             </h4>
-            <a
-              href="/hire-developer"
+            <Link
+              to="/hire-developer"
               className="text-xs font-semibold text-accent hover:underline inline-flex items-center gap-1"
             >
               View All <ArrowRight size={12} />
-            </a>
+            </Link>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {hireCategories[activeHireCategory]?.technologies.map((tech) => (
-              <a
+              <Link
                 key={tech.name}
-                href={tech.href}
+                to={tech.href}
                 className="group flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors"
               >
                 <ArrowRight
@@ -140,19 +141,19 @@ const Navbar = () => {
                 <span className="text-sm text-foreground group-hover:text-accent transition-colors">
                   {tech.name}
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
           <div className="mt-5 pt-4 border-t border-border flex items-center justify-between">
             <p className="text-xs text-muted-foreground">
               Can't find what you need?
             </p>
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="text-xs font-semibold bg-accent text-accent-foreground px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors"
             >
               Talk To Experts
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -190,12 +191,12 @@ const Navbar = () => {
         }`}
       >
         <div className="container mx-auto flex items-center justify-between py-4 px-4">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="font-display text-xl font-bold text-primary tracking-tight"
           >
             Dharam Vir <span className="text-accent">Infotech</span>
-          </a>
+          </Link>
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-7">
@@ -207,8 +208,8 @@ const Navbar = () => {
                   onMouseEnter={() => handleMegaEnter(link.hasMega!)}
                   onMouseLeave={handleMegaLeave}
                 >
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-sm font-medium text-foreground hover:text-accent transition-colors inline-flex items-center gap-1"
                   >
                     {link.label}
@@ -218,7 +219,7 @@ const Navbar = () => {
                         activeMega === link.hasMega ? "rotate-180" : ""
                       }`}
                     />
-                  </a>
+                  </Link>
 
                   {/* Mega Menu */}
                   <div
@@ -234,23 +235,23 @@ const Navbar = () => {
                   </div>
                 </div>
               ) : (
-                <a
+                <Link
                   key={link.href}
-                  href={link.href}
+                  to={link.href}
                   className="text-sm font-medium text-foreground hover:text-accent transition-colors"
                 >
                   {link.label}
-                </a>
+                </Link>
               )
             )}
           </nav>
 
-          <a
-            href="/contact"
+          <Link
+            to="/contact"
             className="hidden lg:inline-flex bg-accent text-accent-foreground px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent/90 transition-colors"
           >
             Get a Free Consultation
-          </a>
+          </Link>
 
           <button
             className="lg:hidden text-primary"
@@ -293,56 +294,56 @@ const Navbar = () => {
                                 {cat.label}
                               </p>
                               {cat.technologies.map((tech) => (
-                                <a
+                                <Link
                                   key={tech.name}
-                                  href={tech.href}
+                                  to={tech.href}
                                   onClick={() => setMenuOpen(false)}
                                   className="block py-1.5 px-2 text-sm text-foreground/80 hover:text-accent"
                                 >
                                   {tech.name}
-                                </a>
+                                </Link>
                               ))}
                             </div>
                           ))
                         : getMegaItems(link.hasMega!).map((item) => (
-                            <a
+                            <Link
                               key={item.title}
-                              href={item.href}
+                              to={item.href}
                               onClick={() => setMenuOpen(false)}
                               className="flex items-center gap-2 py-2 text-sm text-foreground/80 hover:text-accent"
                             >
                               <item.icon size={16} className="text-accent" />
                               {item.title}
-                            </a>
+                            </Link>
                           ))}
-                      <a
-                        href={link.href}
+                      <Link
+                        to={link.href}
                         onClick={() => setMenuOpen(false)}
                         className="flex items-center gap-1 py-2 text-sm font-semibold text-accent"
                       >
                         View All {link.label} <ArrowRight size={14} />
-                      </a>
+                      </Link>
                     </div>
                   )}
                 </div>
               ) : (
-                <a
+                <Link
                   key={link.href}
-                  href={link.href}
+                  to={link.href}
                   onClick={() => setMenuOpen(false)}
                   className="block py-3 text-sm font-medium text-foreground hover:text-accent border-b border-border last:border-0"
                 >
                   {link.label}
-                </a>
+                </Link>
               )
             )}
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               onClick={() => setMenuOpen(false)}
               className="block mt-3 bg-accent text-accent-foreground text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
             >
               Get a Free Consultation
-            </a>
+            </Link>
           </div>
         )}
       </header>
