@@ -98,8 +98,10 @@ const HireDeveloperTemplate = ({
         <h2 className="text-3xl font-bold text-primary text-center mb-4">Meet Our {roleLabel}s</h2>
         <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">Pre-vetted, experienced developers ready to join your team immediately.</p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {devProfiles.map((dev) => (
-            <div key={dev.name} className="bg-card border border-border rounded-xl p-6 hover:shadow-xl transition-all hover:-translate-y-1 group">
+          {devProfiles.map((dev) => {
+            const devSlug = dev.name.toLowerCase().replace(/\s+/g, "-");
+            return (
+            <Link to={`/developer/${devSlug}?role=${encodeURIComponent(dev.role)}`} key={dev.name} className="bg-card border border-border rounded-xl p-6 hover:shadow-xl transition-all hover:-translate-y-1 group block">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-16 h-16 rounded-full bg-accent/10 border-2 border-accent flex items-center justify-center text-xl font-bold text-accent">
                   {dev.avatar}
@@ -135,11 +137,12 @@ const HireDeveloperTemplate = ({
                   <span key={s} className="text-xs bg-accent/10 text-accent px-2.5 py-1 rounded-full font-medium">{s}</span>
                 ))}
               </div>
-              <Link to="/contact" className="block w-full text-center bg-accent text-accent-foreground py-2.5 rounded-lg font-semibold text-sm hover:bg-accent/90 transition-colors">
-                Hire {dev.name.split(" ")[0]}
-              </Link>
-            </div>
-          ))}
+              <span className="block w-full text-center bg-accent text-accent-foreground py-2.5 rounded-lg font-semibold text-sm group-hover:bg-accent/90 transition-colors">
+                View Profile & Hire
+              </span>
+            </Link>
+            );
+          })}
         </div>
       </div>
     </section>

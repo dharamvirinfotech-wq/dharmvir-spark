@@ -49,7 +49,7 @@ import HireBlockchain from "./pages/hire/HireBlockchain.tsx";
 import HireWordpress from "./pages/hire/HireWordpress.tsx";
 import HireShopify from "./pages/hire/HireShopify.tsx";
 import HireMagento from "./pages/hire/HireMagento.tsx";
-
+import DeveloperProfile from "./pages/DeveloperProfile.tsx";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -104,6 +104,7 @@ const App = () => (
           <Route path="/hire-developer/wordpress" element={<HireWordpress />} />
           <Route path="/hire-developer/shopify" element={<HireShopify />} />
           <Route path="/hire-developer/magento" element={<HireMagento />} />
+          <Route path="/developer/:slug" element={<DeveloperProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
