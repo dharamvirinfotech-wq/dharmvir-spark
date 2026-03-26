@@ -17,6 +17,14 @@ import AiDevelopment from "./pages/services/AiDevelopment.tsx";
 import Ecommerce from "./pages/services/Ecommerce.tsx";
 import ProductEngineering from "./pages/services/ProductEngineering.tsx";
 import DedicatedTeams from "./pages/services/DedicatedTeams.tsx";
+import Frontend from "./pages/technologies/Frontend.tsx";
+import Backend from "./pages/technologies/Backend.tsx";
+import Mobile from "./pages/technologies/Mobile.tsx";
+import DatabaseStorage from "./pages/technologies/DatabaseStorage.tsx";
+import CloudDevops from "./pages/technologies/CloudDevops.tsx";
+import AiMl from "./pages/technologies/AiMl.tsx";
+import CmsEcommerce from "./pages/technologies/CmsEcommerce.tsx";
+import SecurityTesting from "./pages/technologies/SecurityTesting.tsx";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +47,14 @@ const App = () => (
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/technologies" element={<Technologies />} />
+          <Route path="/technologies/frontend" element={<Frontend />} />
+          <Route path="/technologies/backend" element={<Backend />} />
+          <Route path="/technologies/mobile" element={<Mobile />} />
+          <Route path="/technologies/database" element={<DatabaseStorage />} />
+          <Route path="/technologies/cloud" element={<CloudDevops />} />
+          <Route path="/technologies/ai" element={<AiMl />} />
+          <Route path="/technologies/cms" element={<CmsEcommerce />} />
+          <Route path="/technologies/security" element={<SecurityTesting />} />
           <Route path="/hire-developer" element={<HireDeveloper />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
