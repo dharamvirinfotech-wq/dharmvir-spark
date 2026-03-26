@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.jpg";
 
 interface PageBannerProps {
@@ -25,7 +26,7 @@ const PageBanner = ({ title, subtitle, breadcrumb }: PageBannerProps) => {
         )}
         {breadcrumb && (
           <p className="text-primary-foreground/60 text-sm animate-fade-in-up-delay-2">
-            <a href="/" className="hover:text-accent transition-colors">Home</a>
+            <Link to="/" className="hover:text-accent transition-colors">Home</Link>
             <span className="mx-2">/</span>
             <span className="text-accent">{breadcrumb}</span>
           </p>

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground pt-16 pb-8">
@@ -18,10 +20,10 @@ const Footer = () => {
               Services
             </h4>
             <ul className="space-y-2.5 text-sm text-primary-foreground/60">
-              <li><a href="/services" className="hover:text-accent transition-colors">Web Development</a></li>
-              <li><a href="/services" className="hover:text-accent transition-colors">Mobile Apps</a></li>
-              <li><a href="/services" className="hover:text-accent transition-colors">AI & ML Solutions</a></li>
-              <li><a href="/services" className="hover:text-accent transition-colors">E-commerce</a></li>
+              <li><Link to="/services" className="hover:text-accent transition-colors">Web Development</Link></li>
+              <li><Link to="/services" className="hover:text-accent transition-colors">Mobile Apps</Link></li>
+              <li><Link to="/services" className="hover:text-accent transition-colors">AI & ML Solutions</Link></li>
+              <li><Link to="/services" className="hover:text-accent transition-colors">E-commerce</Link></li>
             </ul>
           </div>
 
@@ -30,10 +32,10 @@ const Footer = () => {
               Company
             </h4>
             <ul className="space-y-2.5 text-sm text-primary-foreground/60">
-              <li><a href="/about" className="hover:text-accent transition-colors">About Us</a></li>
-              <li><a href="/portfolio" className="hover:text-accent transition-colors">Portfolio</a></li>
-              <li><a href="/contact" className="hover:text-accent transition-colors">Contact</a></li>
-              <li><a href="/technologies" className="hover:text-accent transition-colors">Technologies</a></li>
+              <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
+              <li><Link to="/portfolio" className="hover:text-accent transition-colors">Portfolio</Link></li>
+              <li><Link to="/contact" className="hover:text-accent transition-colors">Contact</Link></li>
+              <li><Link to="/technologies" className="hover:text-accent transition-colors">Technologies</Link></li>
             </ul>
           </div>
 
