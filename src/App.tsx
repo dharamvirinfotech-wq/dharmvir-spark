@@ -119,6 +119,21 @@ const App = () => (
           <Route path="/hire-developer/wordpress" element={<HireWordpress />} />
           <Route path="/hire-developer/shopify" element={<HireShopify />} />
           <Route path="/hire-developer/magento" element={<HireMagento />} />
+          <Route path="/hire-developer/laravel" element={<HireLaravel />} />
+          <Route path="/hire-developer/django" element={<HireDjango />} />
+          <Route path="/hire-developer/golang" element={<HireGolang />} />
+          <Route path="/hire-developer/ruby-on-rails" element={<HireRubyOnRails />} />
+          <Route path="/hire-developer/swift" element={<HireSwift />} />
+          <Route path="/hire-developer/kotlin" element={<HireKotlin />} />
+          <Route path="/hire-developer/graphql" element={<HireGraphql />} />
+          <Route path="/hire-developer/aws" element={<HireAws />} />
+          <Route path="/hire-developer/mean-stack" element={<HireMeanStack />} />
+          <Route path="/hire-developer/ui-ux" element={<HireUiUx />} />
+          <Route path="/hire-developer/qa" element={<HireQa />} />
+          <Route path="/hire-developer/salesforce" element={<HireSalesforce />} />
+          <Route path="/hire-developer/power-bi" element={<HirePowerBi />} />
+          <Route path="/hire-developer/rust" element={<HireRust />} />
+          <Route path="/hire-developer/game-developer" element={<HireGameDev />} />
           <Route path="/developer/:slug" element={<DeveloperProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
