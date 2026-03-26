@@ -13,11 +13,6 @@ import {
   megaServices,
   megaTechnologies,
   hireCategories,
-import {
-  navLinks,
-  megaServices,
-  megaTechnologies,
-  hireCategories,
   promotionCategories,
 } from "@/data/navigation";
 
