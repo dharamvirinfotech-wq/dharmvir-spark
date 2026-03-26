@@ -104,6 +104,7 @@ const App = () => (
           <Route path="/hire-developer/wordpress" element={<HireWordpress />} />
           <Route path="/hire-developer/shopify" element={<HireShopify />} />
           <Route path="/hire-developer/magento" element={<HireMagento />} />
+          <Route path="/developer/:slug" element={<DeveloperProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
