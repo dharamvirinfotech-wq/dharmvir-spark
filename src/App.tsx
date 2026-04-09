@@ -187,6 +187,7 @@ const App = () => (
           <Route path="/promotion/ai-email-automation" element={<AiEmailAutomation />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
