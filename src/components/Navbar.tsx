@@ -7,6 +7,7 @@ import {
   X,
   ChevronDown,
   ArrowRight,
+  LogIn,
 } from "lucide-react";
 import {
   navLinks,
@@ -247,12 +248,20 @@ const Navbar = () => {
             )}
           </nav>
 
-          <Link
-            to="/contact"
-            className="hidden lg:inline-flex bg-accent text-accent-foreground px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent/90 transition-colors"
-          >
-            Get a Free Consultation
-          </Link>
+          <div className="hidden lg:flex items-center gap-3">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 border border-accent text-accent px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent hover:text-accent-foreground transition-colors"
+            >
+              <LogIn size={16} /> Login
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex bg-accent text-accent-foreground px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent/90 transition-colors"
+            >
+              Get a Free Consultation
+            </Link>
+          </div>
 
           <button
             className="lg:hidden text-primary"
@@ -339,9 +348,16 @@ const Navbar = () => {
               )
             )}
             <Link
+              to="/login"
+              onClick={() => setMenuOpen(false)}
+              className="block mt-3 border border-accent text-accent text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
+            >
+              Login / Register
+            </Link>
+            <Link
               to="/contact"
               onClick={() => setMenuOpen(false)}
-              className="block mt-3 bg-accent text-accent-foreground text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
+              className="block mt-2 bg-accent text-accent-foreground text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
             >
               Get a Free Consultation
             </Link>
