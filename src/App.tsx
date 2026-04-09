@@ -66,6 +66,9 @@ import HireRust from "./pages/hire/HireRust.tsx";
 import HireGameDev from "./pages/hire/HireGameDev.tsx";
 import DeveloperProfile from "./pages/DeveloperProfile.tsx";
 import Promotion from "./pages/Promotion.tsx";
+import Login from "./pages/Login.tsx";
+import Register from "./pages/Register.tsx";
+import Dashboard from "./pages/admin/Dashboard.tsx";
 import SeoServices from "./pages/promotion/SeoServices.tsx";
 import OnPageSeo from "./pages/promotion/OnPageSeo.tsx";
 import OrganicSeo from "./pages/promotion/OrganicSeo.tsx";
@@ -181,6 +184,9 @@ const App = () => (
           <Route path="/promotion/predictive-marketing" element={<PredictiveMarketing />} />
           <Route path="/promotion/ai-ad-optimization" element={<AiAdOptimization />} />
           <Route path="/promotion/ai-email-automation" element={<AiEmailAutomation />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/admin" element={<Dashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

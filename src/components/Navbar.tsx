@@ -7,6 +7,7 @@ import {
   X,
   ChevronDown,
   ArrowRight,
+  LogIn,
 } from "lucide-react";
 import {
   navLinks,
