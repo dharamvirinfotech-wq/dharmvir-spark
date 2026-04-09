@@ -69,6 +69,7 @@ import Promotion from "./pages/Promotion.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Dashboard from "./pages/admin/Dashboard.tsx";
+import AdminUsers from "./pages/admin/Users.tsx";
 import SeoServices from "./pages/promotion/SeoServices.tsx";
 import OnPageSeo from "./pages/promotion/OnPageSeo.tsx";
 import OrganicSeo from "./pages/promotion/OrganicSeo.tsx";
@@ -187,6 +188,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
