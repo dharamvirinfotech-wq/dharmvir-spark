@@ -24,6 +24,7 @@ const sidebarLinks = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
   { label: "Users", icon: UsersIcon, href: "/admin/users" },
   { label: "Roles", icon: Shield, href: "/admin/roles" },
+  { label: "Developers", icon: UsersIcon, href: "/admin/developers" },
   { label: "Pages", icon: FileText, href: "/admin/pages" },
   { label: "Inquiries", icon: Mail, href: "/admin/inquiries" },
   { label: "Settings", icon: Settings, href: "/admin/settings" },
