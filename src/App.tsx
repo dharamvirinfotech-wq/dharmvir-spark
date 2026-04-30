@@ -75,6 +75,8 @@ import Register from "./pages/Register.tsx";
 import Dashboard from "./pages/admin/Dashboard.tsx";
 import AdminUsers from "./pages/admin/Users.tsx";
 import AdminInquiries from "./pages/admin/Inquiries.tsx";
+import RolePanelRouter from "./pages/panel/RolePanelRouter.tsx";
+import RoleDashboard from "./pages/panel/RoleDashboard.tsx";
 import SeoServices from "./pages/promotion/SeoServices.tsx";
 import OnPageSeo from "./pages/promotion/OnPageSeo.tsx";
 import OrganicSeo from "./pages/promotion/OrganicSeo.tsx";
@@ -215,6 +217,31 @@ const App = () => (
             element={
               <ProtectedRoute roles={["admin", "editor"]}>
                 <AdminInquiries />
+              </ProtectedRoute>
+            }
+          />
+          {/* Dynamic role-based panel */}
+          <Route
+            path="/panel"
+            element={
+              <ProtectedRoute>
+                <RolePanelRouter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/panel/:role"
+            element={
+              <ProtectedRoute>
+                <RoleDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/panel/:role/*"
+            element={
+              <ProtectedRoute>
+                <RoleDashboard />
               </ProtectedRoute>
             }
           />

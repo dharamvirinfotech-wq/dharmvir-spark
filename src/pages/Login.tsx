@@ -27,10 +27,8 @@ const Login = () => {
       toast({ title: "Welcome back", description: `Signed in as ${user.full_name}` });
       const from = (location.state as { from?: string } | null)?.from;
       if (from) return navigate(from, { replace: true });
-      // Role-based redirect
-      if (user.role === "admin") navigate("/admin", { replace: true });
-      else if (user.role === "editor") navigate("/admin/inquiries", { replace: true });
-      else navigate("/", { replace: true });
+      // Dynamic role-based panel — works for admin, employee, employer, client, etc.
+      navigate("/panel", { replace: true });
     } catch (err) {
       toast({
         title: "Login failed",

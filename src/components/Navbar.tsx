@@ -289,15 +289,13 @@ const Navbar = () => {
                       <p className="text-xs text-muted-foreground">Signed in as</p>
                       <p className="text-sm font-semibold text-primary truncate">{user.email}</p>
                     </div>
-                    {(user.role === "admin" || user.role === "editor") && (
-                      <Link
-                        to={user.role === "admin" ? "/admin" : "/admin/inquiries"}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted"
-                      >
-                        <LayoutDashboard size={16} className="text-accent" />
-                        Admin Panel
-                      </Link>
-                    )}
+                    <Link
+                      to="/panel"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted"
+                    >
+                      <LayoutDashboard size={16} className="text-accent" />
+                      My Panel
+                    </Link>
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-destructive/10"
@@ -415,15 +413,13 @@ const Navbar = () => {
                   <p className="text-sm font-semibold text-primary truncate">{user.full_name}</p>
                   <p className="text-xs text-accent uppercase tracking-wider">{user.role}</p>
                 </div>
-                {(user.role === "admin" || user.role === "editor") && (
-                  <Link
-                    to={user.role === "admin" ? "/admin" : "/admin/inquiries"}
-                    onClick={() => setMenuOpen(false)}
-                    className="block mt-2 border border-accent text-accent text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
-                  >
-                    Admin Panel
-                  </Link>
-                )}
+                <Link
+                  to="/panel"
+                  onClick={() => setMenuOpen(false)}
+                  className="block mt-2 border border-accent text-accent text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
+                >
+                  My Panel
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full mt-2 border border-destructive text-destructive text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
