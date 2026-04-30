@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Phone,
   Mail,
@@ -8,6 +8,9 @@ import {
   ChevronDown,
   ArrowRight,
   LogIn,
+  LogOut,
+  LayoutDashboard,
+  UserCircle,
 } from "lucide-react";
 import {
   navLinks,
@@ -16,6 +19,7 @@ import {
   hireCategories,
   promotionCategories,
 } from "@/data/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -24,7 +28,17 @@ const Navbar = () => {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [activeHireCategory, setActiveHireCategory] = useState(0);
   const [activePromoCategory, setActivePromoCategory] = useState(0);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    setUserMenuOpen(false);
+    setMenuOpen(false);
+    navigate("/", { replace: true });
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
