@@ -5,16 +5,16 @@ import { useToast } from "@/hooks/use-toast";
 
 const ContactSection = () => {
   const { toast } = useToast();
-  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "",service:"", message: "" });
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => { 
     e.preventDefault();
     setSubmitting(true);
     try {
       await contactApi.submit(form);
       toast({ title: "Message sent!", description: "We'll get back to you soon." });
-      setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+      setForm({ name: "", email: "", phone: "", subject: "", service: "", message: "" });
     } catch (err: any) {
       toast({
         title: "Failed to send",
@@ -109,6 +109,17 @@ const ContactSection = () => {
               onChange={(e) => setForm({ ...form, subject: e.target.value })}
               className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50"
             />
+             <select
+              value={form.service}
+              onChange={(e) => setForm({ ...form, service: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50"
+            >
+              <option value="">Select a services</option>
+              <option value="General Inquiry">General Inquiry</option>
+              <option value="Support Request">Support Request</option>
+              <option value="Feedback">Feedback</option>
+            </select>
+
             <textarea
               placeholder="Your Message"
               rows={4}
@@ -117,7 +128,7 @@ const ContactSection = () => {
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none"
-            />
+            />           
             <button
               type="submit"
               disabled={submitting}

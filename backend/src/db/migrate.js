@@ -28,7 +28,7 @@ async function migrate() {
       email VARCHAR(190) NOT NULL UNIQUE,
       phone VARCHAR(30) DEFAULT NULL,
       password_hash VARCHAR(255) DEFAULT NULL,
-      role ENUM('admin','editor','user') NOT NULL DEFAULT 'user',
+      role ENUM('admin','employee','employee') NOT NULL DEFAULT 'user',
       company_name VARCHAR(150) DEFAULT NULL,
       status ENUM('active','inactive','suspended') NOT NULL DEFAULT 'active',
       two_factor_enabled TINYINT(1) NOT NULL DEFAULT 0,

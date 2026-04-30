@@ -19,7 +19,7 @@ const Register = () => {
   const [enable2FA, setEnable2FA] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    fullName: "", email: "", phone: "", password: "", confirmPassword: "", role: "user", companyName: "",
+    fullName: "", email: "", phone: "", password: "", confirmPassword: "", role: "employee", companyName: "",
   });
   const { toast } = useToast();
   const { register } = useAuth();
@@ -50,9 +50,9 @@ const Register = () => {
         company_name: form.companyName || undefined,
         two_factor_enabled: enable2FA,
       });
-      toast({ title: "Account created", description: `Welcome, ${user.full_name}!` });
-      if (user.role === "admin") navigate("/admin", { replace: true });
-      else navigate("/", { replace: true });
+      toast({ title: "User created successfully", description: `Welcome, ${user.full_name}! Your account has been created.` });
+      if (user.role === "admin") navigate("/panel/admin", { replace: true });
+       else navigate("/panel/user", { replace: true });
     } catch (err) {
       toast({
         title: "Registration failed",
@@ -159,10 +159,9 @@ const Register = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="role">Role</Label>
-                  <select id="role" name="role" value={form.role} onChange={handleChange} className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                    <option value="user">User / Client</option>
-                    <option value="editor">Editor</option>
-                    <option value="admin">Admin</option>
+                  <select id="role" name="role" value={form.role} onChange={handleChange} className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">                    
+                    <option value="employee">Employee</option>
+                    <option value="employer">Employer</option>
                   </select>
                 </div>
                 <div>

@@ -26,6 +26,7 @@ function publicUser(u) {
 
 exports.register = async (req, res, next) => {
   try {
+    console.log('Registering user with data:', req.body);
     const {
       full_name, email, phone, password,
       role = 'user', company_name = null, two_factor_enabled = false,

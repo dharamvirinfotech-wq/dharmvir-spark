@@ -11,7 +11,7 @@ router.post(
     body('email').isEmail().withMessage('Valid email required').normalizeEmail(),
     body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
     body('phone').optional({ nullable: true }).isString(),
-    body('role').optional().isIn(['admin', 'editor', 'user']),
+    body('role').optional().isIn(['admin', 'editor', 'user', 'employee', 'employer', 'client', 'developer']),
     body('company_name').optional({ nullable: true }).isString(),
     body('two_factor_enabled').optional().isBoolean(),
   ],

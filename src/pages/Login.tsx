@@ -32,7 +32,9 @@ const Login = () => {
       const from = (location.state as { from?: string } | null)?.from;
       if (from) return navigate(from, { replace: true });
       // Dynamic role-based panel — works for admin, employee, employer, client, etc.
-      navigate("/panel", { replace: true });
+      console.log("User role:", user.role);
+      if (user.role === "admin") navigate("/panel/admin", { replace: true });
+      else navigate("/panel/user", { replace: true });      
     } catch (err) {
       toast({
         title: "Login failed",

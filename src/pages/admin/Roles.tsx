@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import {
-  LayoutDashboard, Users as UsersIcon, FileText, Settings, LogOut, Menu, X,
   Mail, BarChart3, Bell, Plus, Search, Edit, Trash2, ShieldCheck, MoreVertical,
   KeyRound, UserCog,
 } from "lucide-react";
+import Sidebar from "@/components/Sidebar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,16 +22,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-
-const sidebarLinks = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
-  { label: "Users", icon: UsersIcon, href: "/admin/users" },
-  { label: "Roles", icon: ShieldCheck, href: "/admin/roles" },
-  { label: "Developers", icon: UsersIcon, href: "/admin/developers" },
-  { label: "Pages", icon: FileText, href: "/admin/pages" },
-  { label: "Inquiries", icon: Mail, href: "/admin/inquiries" },
-  { label: "Settings", icon: Settings, href: "/admin/settings" },
-];
 
 const ALL_PERMISSIONS = [
   { key: "users.read", label: "View Users" },
@@ -214,38 +203,11 @@ const AdminRoles = () => {
   return (
     <div className="min-h-screen bg-muted/30 flex">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? "w-64" : "w-0 lg:w-20"} bg-primary text-primary-foreground transition-all duration-300 flex flex-col fixed lg:relative h-screen z-40 overflow-hidden`}>
-        <div className="p-4 flex items-center justify-between border-b border-white/10">
-          {sidebarOpen && <Link to="/" className="font-bold text-lg">DV <span className="text-accent">Admin</span></Link>}
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-primary-foreground/70 hover:text-primary-foreground">
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-        <nav className="flex-1 p-3 space-y-1">
-          {sidebarLinks.map((item) => (
-            <Link
-              key={item.label}
-              to={item.href}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                item.label === "Roles"
-                  ? "bg-accent text-accent-foreground"
-                  : "text-primary-foreground/70 hover:bg-white/10 hover:text-primary-foreground"
-              }`}
-            >
-              <item.icon size={18} />
-              {sidebarOpen && <span>{item.label}</span>}
-            </Link>
-          ))}
-        </nav>
-        <div className="p-3 border-t border-white/10">
-          <Link to="/login" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-primary-foreground/70 hover:bg-white/10 hover:text-primary-foreground transition-colors">
-            <LogOut size={18} />
-            {sidebarOpen && <span>Logout</span>}
-          </Link>
-        </div>
-      </aside>
+      <Sidebar 
+        open={sidebarOpen} 
+        onToggle={() => setSidebarOpen(!sidebarOpen)} 
+      />
 
-      {/* Main */}
       <main className="flex-1 min-h-screen">
         <header className="bg-background border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-30">
           <div>
