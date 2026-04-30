@@ -1,9 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Provider as ReduxProvider } from "react-redux";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/context/AuthContext";
+import { store } from "@/store";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index.tsx";
 import Services from "./pages/Services.tsx";
@@ -98,6 +100,7 @@ import AiEmailAutomation from "./pages/promotion/AiEmailAutomation.tsx";
 const queryClient = new QueryClient();
 
 const App = () => (
+  <ReduxProvider store={store}>
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -222,6 +225,7 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
+  </ReduxProvider>
 );
 
 export default App;

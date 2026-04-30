@@ -1,0 +1,115 @@
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { authApi, AuthUser, tokenStore, userStore } from "@/lib/api";
+
+type AuthState = {
+  user: AuthUser | null;
+  token: string | null;
+  loading: boolean;
+  error: string | null;
+};
+
+const initialState: AuthState = {
+  user: userStore.get<AuthUser>(),
+  token: tokenStore.get(),
+  loading: !!tokenStore.get(),
+  error: null,
+};
+
+export const loginThunk = createAsyncThunk<
+  AuthUser,
+  { email: string; password: string },
+  { rejectValue: string }
+>("auth/login", async ({ email, password }, { rejectWithValue }) => {
+  try {
+    const res = await authApi.login(email, password);
+    tokenStore.set(res.token);
+    userStore.set(res.user);
+    return res.user;
+  } catch (err) {
+    return rejectWithValue(err instanceof Error ? err.message : "Login failed");
+  }
+});
+
+export const registerThunk = createAsyncThunk<
+  AuthUser,
+  Parameters<typeof authApi.register>[0],
+  { rejectValue: string }
+>("auth/register", async (payload, { rejectWithValue }) => {
+  try {
+    const res = await authApi.register(payload);
+    tokenStore.set(res.token);
+    userStore.set(res.user);
+    return res.user;
+  } catch (err) {
+    return rejectWithValue(err instanceof Error ? err.message : "Registration failed");
+  }
+});
+
+export const fetchMeThunk = createAsyncThunk<AuthUser, void, { rejectValue: string }>(
+  "auth/me",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await authApi.me();
+      userStore.set(res.user);
+      return res.user;
+    } catch (err) {
+      tokenStore.clear();
+      return rejectWithValue(err instanceof Error ? err.message : "Session expired");
+    }
+  }
+);
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    logout(state) {
+      tokenStore.clear();
+      state.user = null;
+      state.token = null;
+      state.error = null;
+    },
+    clearError(state) {
+      state.error = null;
+    },
+  },
+  extraReducers: (builder) => {
+    const setUser = (state: AuthState, action: PayloadAction<AuthUser>) => {
+      state.user = action.payload;
+      state.token = tokenStore.get();
+      state.loading = false;
+      state.error = null;
+    };
+    builder
+      .addCase(loginThunk.pending, (s) => {
+        s.loading = true;
+        s.error = null;
+      })
+      .addCase(loginThunk.fulfilled, setUser)
+      .addCase(loginThunk.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.payload ?? a.error.message ?? "Login failed";
+      })
+      .addCase(registerThunk.pending, (s) => {
+        s.loading = true;
+        s.error = null;
+      })
+      .addCase(registerThunk.fulfilled, setUser)
+      .addCase(registerThunk.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.payload ?? a.error.message ?? "Registration failed";
+      })
+      .addCase(fetchMeThunk.pending, (s) => {
+        s.loading = true;
+      })
+      .addCase(fetchMeThunk.fulfilled, setUser)
+      .addCase(fetchMeThunk.rejected, (s) => {
+        s.loading = false;
+        s.user = null;
+        s.token = null;
+      });
+  },
+});
+
+export const { logout, clearError } = authSlice.actions;
+export default authSlice.reducer;
