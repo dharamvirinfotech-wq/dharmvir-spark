@@ -27,17 +27,39 @@ async function migrate() {
       full_name VARCHAR(150) NOT NULL,
       email VARCHAR(190) NOT NULL UNIQUE,
       phone VARCHAR(30) DEFAULT NULL,
-      password_hash VARCHAR(255) NOT NULL,
+      password_hash VARCHAR(255) DEFAULT NULL,
       role ENUM('admin','editor','user') NOT NULL DEFAULT 'user',
       company_name VARCHAR(150) DEFAULT NULL,
       status ENUM('active','inactive','suspended') NOT NULL DEFAULT 'active',
       two_factor_enabled TINYINT(1) NOT NULL DEFAULT 0,
+      avatar_url VARCHAR(500) DEFAULT NULL,
+      provider ENUM('local','google','facebook') NOT NULL DEFAULT 'local',
+      provider_id VARCHAR(190) DEFAULT NULL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       INDEX idx_users_role (role),
-      INDEX idx_users_status (status)
+      INDEX idx_users_status (status),
+      INDEX idx_users_provider (provider, provider_id)
     ) ENGINE=InnoDB;
   `);
+
+  // Make password_hash nullable for OAuth users (idempotent)
+  try {
+    await root.query(`ALTER TABLE users MODIFY password_hash VARCHAR(255) DEFAULT NULL;`);
+  } catch (_) { /* ignore */ }
+
+  // Add columns if upgrading an existing DB
+  const ensureColumn = async (col, ddl) => {
+    const [rows] = await root.query(
+      `SELECT COUNT(*) AS c FROM information_schema.COLUMNS
+       WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'users' AND COLUMN_NAME = ?`,
+      [DB_NAME, col]
+    );
+    if (rows[0].c === 0) await root.query(`ALTER TABLE users ADD COLUMN ${ddl};`);
+  };
+  await ensureColumn('avatar_url', `avatar_url VARCHAR(500) DEFAULT NULL`);
+  await ensureColumn('provider', `provider ENUM('local','google','facebook') NOT NULL DEFAULT 'local'`);
+  await ensureColumn('provider_id', `provider_id VARCHAR(190) DEFAULT NULL`);
 
   console.log(`Migration complete on database "${DB_NAME}"`);
   await root.end();

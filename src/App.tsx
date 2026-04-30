@@ -74,6 +74,7 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
+import OAuthCallback from "./pages/OAuthCallback.tsx";
 import Dashboard from "./pages/admin/Dashboard.tsx";
 import AdminUsers from "./pages/admin/Users.tsx";
 import AdminInquiries from "./pages/admin/Inquiries.tsx";
@@ -201,6 +202,7 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/oauth/callback" element={<OAuthCallback />} />
           <Route
             path="/admin"
             element={
