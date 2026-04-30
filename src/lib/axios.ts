@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const API_BASE_URL =
-  (import.meta.env.VITE_API_URL as string) || "http://localhost:8080/api";
+  (import.meta.env.VITE_API_URL as string) || "http://localhost:4000/api";
 
 const TOKEN_KEY = "dv_auth_token";
 const USER_KEY = "dv_auth_user";
