@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X,
-  BarChart3, Mail, Bell, Search, Eye, Trash2, Reply, Phone, Calendar, Filter, ShieldCheck
+  BarChart3, Mail, Bell, Search, Eye, Trash2, Reply, Phone, Calendar, Filter, ShieldCheck,
+  Loader2, MoreVertical
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { MoreVertical } from "lucide-react";
+import { contactApi, type ContactInquiry, type InquiryCounts } from "@/lib/api";
 
 const sidebarLinks = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
@@ -31,86 +32,107 @@ const sidebarLinks = [
   { label: "Settings", icon: Settings, href: "/admin/settings" },
 ];
 
-interface Inquiry {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  service: string;
-  message: string;
-  date: string;
-  status: "New" | "Replied" | "Closed";
-}
-
-const seed: Inquiry[] = [
-  { id: "1", name: "Rahul Sharma", email: "rahul@example.com", phone: "+91 8750 299 299", subject: "Need a quote for new website", service: "Web Development", message: "Hi, we are looking to build a corporate website with 10 pages. Please share a quote and timeline.", date: "2026-04-30 10:24", status: "New" },
-  { id: "2", name: "Priya Patel", email: "priya@example.com", phone: "+91 8750 299 299", subject: "Mobile App for Food Delivery", service: "Mobile App", message: "We need an iOS + Android app similar to Swiggy. Can we schedule a discovery call?", date: "2026-04-30 08:10", status: "Replied" },
-  { id: "3", name: "Amit Kumar", email: "amit@example.com", phone: "+91 8750 299 299", subject: "SEO audit request", service: "SEO Services", message: "Our rankings have dropped. Please run a free SEO audit on our domain.", date: "2026-04-29 17:42", status: "New" },
-  { id: "4", name: "Sarah Wilson", email: "sarah@example.com", phone: "+91 8750 299 299", subject: "AI chatbot for ecommerce", service: "AI Development", message: "Looking to integrate an AI customer support chatbot on our Shopify store.", date: "2026-04-28 14:05", status: "Closed" },
-  { id: "5", name: "Kunal Mehta", email: "kunal@brandify.in", phone: "+91 8750 299 299", subject: "Hire React developer", service: "Hire Developer", message: "We need a senior React developer for 3 months on a dedicated basis.", date: "2026-04-27 11:30", status: "Replied" },
-];
-
 const Inquiries = () => {
   const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [inquiries, setInquiries] = useState<Inquiry[]>(seed);
+  const [inquiries, setInquiries] = useState<ContactInquiry[]>([]);
+  const [counts, setCounts] = useState<InquiryCounts>({ total: 0, new_count: 0, replied_count: 0, closed_count: 0 });
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [serviceFilter, setServiceFilter] = useState("all");
-  const [viewing, setViewing] = useState<Inquiry | null>(null);
-  const [replying, setReplying] = useState<Inquiry | null>(null);
+  const [viewing, setViewing] = useState<ContactInquiry | null>(null);
+  const [replying, setReplying] = useState<ContactInquiry | null>(null);
   const [replyText, setReplyText] = useState("");
 
-  const services = Array.from(new Set(seed.map((i) => i.service)));
+  const services = useMemo(
+    () => Array.from(new Set(inquiries.map((i) => i.service).filter(Boolean) as string[])),
+    [inquiries]
+  );
 
-  const filtered = inquiries.filter((i) => {
-    const matchSearch =
-      i.name.toLowerCase().includes(search.toLowerCase()) ||
-      i.email.toLowerCase().includes(search.toLowerCase()) ||
-      i.subject.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === "all" || i.status === statusFilter;
-    const matchService = serviceFilter === "all" || i.service === serviceFilter;
-    return matchSearch && matchStatus && matchService;
-  });
-
-  const counts = {
-    total: inquiries.length,
-    new: inquiries.filter((i) => i.status === "New").length,
-    replied: inquiries.filter((i) => i.status === "Replied").length,
-    closed: inquiries.filter((i) => i.status === "Closed").length,
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const data = await contactApi.list({
+        status: statusFilter,
+        service: serviceFilter,
+        search: search || undefined,
+      });
+      setInquiries(data.inquiries);
+      setCounts({
+        total: Number(data.counts.total) || 0,
+        new_count: Number(data.counts.new_count) || 0,
+        replied_count: Number(data.counts.replied_count) || 0,
+        closed_count: Number(data.counts.closed_count) || 0,
+      });
+    } catch (err: any) {
+      toast({
+        title: "Failed to load",
+        description: err?.response?.data?.message || "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateStatus = (id: string, status: Inquiry["status"]) => {
-    setInquiries((prev) => prev.map((i) => (i.id === id ? { ...i, status } : i)));
-    toast({ title: "Status updated", description: `Inquiry marked as ${status}.` });
+  useEffect(() => {
+    const t = setTimeout(fetchData, 250);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusFilter, serviceFilter, search]);
+
+  const updateStatus = async (id: number, status: ContactInquiry["status"]) => {
+    try {
+      await contactApi.update(id, { status });
+      setInquiries((prev) => prev.map((i) => (i.id === id ? { ...i, status } : i)));
+      toast({ title: "Status updated", description: `Marked as ${status}.` });
+      fetchData();
+    } catch (err: any) {
+      toast({ title: "Update failed", description: err?.response?.data?.message || "Try again.", variant: "destructive" });
+    }
   };
 
-  const deleteInquiry = (id: string) => {
-    setInquiries((prev) => prev.filter((i) => i.id !== id));
-    toast({ title: "Inquiry deleted" });
+  const deleteInquiry = async (id: number) => {
+    try {
+      await contactApi.remove(id);
+      setInquiries((prev) => prev.filter((i) => i.id !== id));
+      toast({ title: "Inquiry deleted" });
+      fetchData();
+    } catch (err: any) {
+      toast({ title: "Delete failed", description: err?.response?.data?.message || "Try again.", variant: "destructive" });
+    }
   };
 
-  const sendReply = () => {
+  const sendReply = async () => {
     if (!replying || !replyText.trim()) return;
-    updateStatus(replying.id, "Replied");
-    setReplying(null);
-    setReplyText("");
-    toast({ title: "Reply sent", description: "Your response has been recorded." });
+    try {
+      await contactApi.update(replying.id, { status: "replied", admin_notes: replyText });
+      toast({ title: "Reply recorded", description: "Inquiry marked as replied." });
+      setReplying(null);
+      setReplyText("");
+      fetchData();
+    } catch (err: any) {
+      toast({ title: "Failed", description: err?.response?.data?.message || "Try again.", variant: "destructive" });
+    }
   };
 
-  const statusBadge = (s: Inquiry["status"]) => {
+  const statusBadge = (s: ContactInquiry["status"]) => {
     const map = {
-      New: "bg-accent/10 text-accent",
-      Replied: "bg-blue-500/10 text-blue-600",
-      Closed: "bg-muted text-muted-foreground",
+      new: "bg-accent/10 text-accent",
+      replied: "bg-blue-500/10 text-blue-600",
+      closed: "bg-muted text-muted-foreground",
     } as const;
-    return <span className={`px-2 py-1 rounded-full text-xs font-medium ${map[s]}`}>{s}</span>;
+    const labels = { new: "New", replied: "Replied", closed: "Closed" };
+    return <span className={`px-2 py-1 rounded-full text-xs font-medium ${map[s]}`}>{labels[s]}</span>;
+  };
+
+  const fmtDate = (d: string) => {
+    try { return new Date(d).toLocaleString(); } catch { return d; }
   };
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      {/* Sidebar */}
       <aside className={`${sidebarOpen ? "w-64" : "w-0 lg:w-20"} bg-primary text-primary-foreground transition-all duration-300 flex flex-col fixed lg:relative h-screen z-40 overflow-hidden`}>
         <div className="p-4 flex items-center justify-between border-b border-white/10">
           {sidebarOpen && (
@@ -144,7 +166,6 @@ const Inquiries = () => {
         </div>
       </aside>
 
-      {/* Main */}
       <main className="flex-1 min-h-screen">
         <header className="bg-background border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-30">
           <div>
@@ -154,20 +175,21 @@ const Inquiries = () => {
           <div className="flex items-center gap-4">
             <button className="relative text-muted-foreground hover:text-foreground">
               <Bell size={20} />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold rounded-full flex items-center justify-center">{counts.new}</span>
+              {counts.new_count > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold rounded-full flex items-center justify-center">{counts.new_count}</span>
+              )}
             </button>
             <div className="w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">A</div>
           </div>
         </header>
 
         <div className="p-6">
-          {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {[
               { label: "Total", value: counts.total, color: "bg-primary/10 text-primary" },
-              { label: "New", value: counts.new, color: "bg-accent/10 text-accent" },
-              { label: "Replied", value: counts.replied, color: "bg-blue-500/10 text-blue-600" },
-              { label: "Closed", value: counts.closed, color: "bg-muted text-muted-foreground" },
+              { label: "New", value: counts.new_count, color: "bg-accent/10 text-accent" },
+              { label: "Replied", value: counts.replied_count, color: "bg-blue-500/10 text-blue-600" },
+              { label: "Closed", value: counts.closed_count, color: "bg-muted text-muted-foreground" },
             ].map((s) => (
               <Card key={s.label} className="border-border">
                 <CardContent className="p-4 flex items-center justify-between">
@@ -183,7 +205,6 @@ const Inquiries = () => {
             ))}
           </div>
 
-          {/* Filters */}
           <Card className="border-border mb-6">
             <CardContent className="p-4 flex flex-col md:flex-row gap-3">
               <div className="relative flex-1">
@@ -199,9 +220,9 @@ const Inquiries = () => {
                 <SelectTrigger className="w-full md:w-44"><Filter size={14} className="mr-2" /><SelectValue placeholder="Status" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="New">New</SelectItem>
-                  <SelectItem value="Replied">Replied</SelectItem>
-                  <SelectItem value="Closed">Closed</SelectItem>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="replied">Replied</SelectItem>
+                  <SelectItem value="closed">Closed</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={serviceFilter} onValueChange={setServiceFilter}>
@@ -214,9 +235,13 @@ const Inquiries = () => {
             </CardContent>
           </Card>
 
-          {/* Table */}
           <Card className="border-border">
-            <CardHeader><CardTitle className="text-base">All Inquiries ({filtered.length})</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                All Inquiries ({inquiries.length})
+                {loading && <Loader2 size={14} className="animate-spin text-muted-foreground" />}
+              </CardTitle>
+            </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -232,18 +257,18 @@ const Inquiries = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.length === 0 ? (
+                    {!loading && inquiries.length === 0 ? (
                       <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">No inquiries found</td></tr>
-                    ) : filtered.map((i) => (
+                    ) : inquiries.map((i) => (
                       <tr key={i.id} className="border-b border-border last:border-0 hover:bg-muted/50">
                         <td className="py-3 px-2 font-medium text-foreground">{i.name}</td>
                         <td className="py-3 px-2 text-muted-foreground">
                           <div>{i.email}</div>
-                          <div className="text-xs">{i.phone}</div>
+                          <div className="text-xs">{i.phone || "—"}</div>
                         </td>
-                        <td className="py-3 px-2 text-foreground max-w-xs truncate">{i.subject}</td>
-                        <td className="py-3 px-2 text-muted-foreground">{i.service}</td>
-                        <td className="py-3 px-2 text-muted-foreground whitespace-nowrap">{i.date}</td>
+                        <td className="py-3 px-2 text-foreground max-w-xs truncate">{i.subject || "—"}</td>
+                        <td className="py-3 px-2 text-muted-foreground">{i.service || "—"}</td>
+                        <td className="py-3 px-2 text-muted-foreground whitespace-nowrap">{fmtDate(i.created_at)}</td>
                         <td className="py-3 px-2">{statusBadge(i.status)}</td>
                         <td className="py-3 px-2 text-right">
                           <DropdownMenu>
@@ -252,11 +277,11 @@ const Inquiries = () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem onClick={() => setViewing(i)}><Eye size={14} className="mr-2" /> View</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => { setReplying(i); setReplyText(""); }}><Reply size={14} className="mr-2" /> Reply</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => { setReplying(i); setReplyText(i.admin_notes || ""); }}><Reply size={14} className="mr-2" /> Reply</DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => updateStatus(i.id, "New")}>Mark as New</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => updateStatus(i.id, "Replied")}>Mark as Replied</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => updateStatus(i.id, "Closed")}>Mark as Closed</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => updateStatus(i.id, "new")}>Mark as New</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => updateStatus(i.id, "replied")}>Mark as Replied</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => updateStatus(i.id, "closed")}>Mark as Closed</DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem onClick={() => deleteInquiry(i.id)} className="text-destructive"><Trash2 size={14} className="mr-2" /> Delete</DropdownMenuItem>
                             </DropdownMenuContent>
@@ -272,7 +297,6 @@ const Inquiries = () => {
         </div>
       </main>
 
-      {/* View Dialog */}
       <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -285,35 +309,40 @@ const Inquiries = () => {
                 <div><Label className="text-muted-foreground">Name</Label><p className="font-medium">{viewing.name}</p></div>
                 <div><Label className="text-muted-foreground">Status</Label><div className="mt-1">{statusBadge(viewing.status)}</div></div>
                 <div><Label className="text-muted-foreground">Email</Label><p className="font-medium flex items-center gap-1"><Mail size={14} /> {viewing.email}</p></div>
-                <div><Label className="text-muted-foreground">Phone</Label><p className="font-medium flex items-center gap-1"><Phone size={14} /> {viewing.phone}</p></div>
-                <div><Label className="text-muted-foreground">Service</Label><p className="font-medium">{viewing.service}</p></div>
-                <div><Label className="text-muted-foreground">Date</Label><p className="font-medium flex items-center gap-1"><Calendar size={14} /> {viewing.date}</p></div>
+                <div><Label className="text-muted-foreground">Phone</Label><p className="font-medium flex items-center gap-1"><Phone size={14} /> {viewing.phone || "—"}</p></div>
+                <div><Label className="text-muted-foreground">Service</Label><p className="font-medium">{viewing.service || "—"}</p></div>
+                <div><Label className="text-muted-foreground">Date</Label><p className="font-medium flex items-center gap-1"><Calendar size={14} /> {fmtDate(viewing.created_at)}</p></div>
               </div>
               <div>
                 <Label className="text-muted-foreground">Subject</Label>
-                <p className="font-medium">{viewing.subject}</p>
+                <p className="font-medium">{viewing.subject || "—"}</p>
               </div>
               <div>
                 <Label className="text-muted-foreground">Message</Label>
                 <div className="mt-1 p-4 bg-muted/50 rounded-lg text-sm whitespace-pre-wrap">{viewing.message}</div>
               </div>
+              {viewing.admin_notes && (
+                <div>
+                  <Label className="text-muted-foreground">Admin Notes / Reply</Label>
+                  <div className="mt-1 p-4 bg-muted/50 rounded-lg text-sm whitespace-pre-wrap">{viewing.admin_notes}</div>
+                </div>
+              )}
             </div>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setViewing(null)}>Close</Button>
-            <Button onClick={() => { if (viewing) { setReplying(viewing); setViewing(null); setReplyText(""); } }}>
+            <Button onClick={() => { if (viewing) { setReplying(viewing); setViewing(null); setReplyText(viewing.admin_notes || ""); } }}>
               <Reply size={14} className="mr-2" /> Reply
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Reply Dialog */}
       <Dialog open={!!replying} onOpenChange={(o) => !o && setReplying(null)}>
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Reply to {replying?.name}</DialogTitle>
-            <DialogDescription>Send a response to {replying?.email}</DialogDescription>
+            <DialogDescription>Save a response note for {replying?.email}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div>
@@ -321,13 +350,13 @@ const Inquiries = () => {
               <Input defaultValue={`Re: ${replying?.subject ?? ""}`} />
             </div>
             <div>
-              <Label>Message</Label>
+              <Label>Message / Internal Note</Label>
               <Textarea rows={6} placeholder="Type your reply..." value={replyText} onChange={(e) => setReplyText(e.target.value)} />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setReplying(null)}>Cancel</Button>
-            <Button onClick={sendReply} disabled={!replyText.trim()}>Send Reply</Button>
+            <Button onClick={sendReply} disabled={!replyText.trim()}>Save & Mark Replied</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

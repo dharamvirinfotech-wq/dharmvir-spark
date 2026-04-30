@@ -1,14 +1,29 @@
 import { useState } from "react";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, Loader2 } from "lucide-react";
+import { contactApi } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 const ContactSection = () => {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const { toast } = useToast();
+  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // placeholder
-    alert("Thank you! We'll get back to you soon.");
-    setForm({ name: "", email: "", phone: "", message: "" });
+    setSubmitting(true);
+    try {
+      await contactApi.submit(form);
+      toast({ title: "Message sent!", description: "We'll get back to you soon." });
+      setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    } catch (err: any) {
+      toast({
+        title: "Failed to send",
+        description: err?.response?.data?.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -64,6 +79,7 @@ const ContactSection = () => {
               type="text"
               placeholder="Your Name"
               required
+              maxLength={150}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50"
@@ -72,6 +88,7 @@ const ContactSection = () => {
               type="email"
               placeholder="Email Address"
               required
+              maxLength={190}
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50"
@@ -79,23 +96,35 @@ const ContactSection = () => {
             <input
               type="tel"
               placeholder="Phone Number"
+              maxLength={30}
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50"
+            />
+            <input
+              type="text"
+              placeholder="Subject"
+              maxLength={255}
+              value={form.subject}
+              onChange={(e) => setForm({ ...form, subject: e.target.value })}
               className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50"
             />
             <textarea
               placeholder="Your Message"
               rows={4}
               required
+              maxLength={5000}
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none"
             />
             <button
               type="submit"
-              className="w-full bg-accent text-accent-foreground py-3.5 rounded-lg font-semibold hover:bg-accent/90 transition-colors"
+              disabled={submitting}
+              className="w-full bg-accent text-accent-foreground py-3.5 rounded-lg font-semibold hover:bg-accent/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
             >
-              Send Message
+              {submitting && <Loader2 className="animate-spin" size={18} />}
+              {submitting ? "Sending..." : "Send Message"}
             </button>
           </form>
         </div>
