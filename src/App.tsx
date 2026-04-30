@@ -79,6 +79,8 @@ import Dashboard from "./pages/admin/Dashboard.tsx";
 import AdminUsers from "./pages/admin/Users.tsx";
 import AdminInquiries from "./pages/admin/Inquiries.tsx";
 import AdminRoles from "./pages/admin/Roles.tsx";
+import AdminAnalytics from "./pages/admin/Analytics.tsx";
+import AdminSettings from "./pages/admin/Settings.tsx";
 import RolePanelRouter from "./pages/panel/RolePanelRouter.tsx";
 import RoleDashboard from "./pages/panel/RoleDashboard.tsx";
 import SeoServices from "./pages/promotion/SeoServices.tsx";
@@ -232,6 +234,22 @@ const App = () => (
             element={
               <ProtectedRoute roles={["admin", "editor"]}>
                 <AdminInquiries />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/analytics"
+            element={
+              <ProtectedRoute roles={["admin"]}>
+                <AdminAnalytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <ProtectedRoute roles={["admin"]}>
+                <AdminSettings />
               </ProtectedRoute>
             }
           />
