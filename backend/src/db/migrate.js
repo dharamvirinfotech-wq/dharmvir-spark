@@ -61,6 +61,28 @@ async function migrate() {
   await ensureColumn('provider', `provider ENUM('local','google','facebook') NOT NULL DEFAULT 'local'`);
   await ensureColumn('provider_id', `provider_id VARCHAR(190) DEFAULT NULL`);
 
+  // Contact Us inquiries
+  await root.query(`
+    CREATE TABLE IF NOT EXISTS contact_inquiries (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(150) NOT NULL,
+      email VARCHAR(190) NOT NULL,
+      phone VARCHAR(30) DEFAULT NULL,
+      subject VARCHAR(255) DEFAULT NULL,
+      service VARCHAR(150) DEFAULT NULL,
+      message TEXT NOT NULL,
+      status ENUM('new','replied','closed') NOT NULL DEFAULT 'new',
+      admin_notes TEXT DEFAULT NULL,
+      ip_address VARCHAR(64) DEFAULT NULL,
+      user_agent VARCHAR(500) DEFAULT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      INDEX idx_inq_status (status),
+      INDEX idx_inq_email (email),
+      INDEX idx_inq_created (created_at)
+    ) ENGINE=InnoDB;
+  `);
+
   console.log(`Migration complete on database "${DB_NAME}"`);
   await root.end();
 }
