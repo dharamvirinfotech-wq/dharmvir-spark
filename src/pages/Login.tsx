@@ -1,22 +1,45 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, LogIn } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock, LogIn, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({ title: "Login Attempted", description: "Backend integration required for authentication." });
+    setSubmitting(true);
+    try {
+      const user = await login(email, password);
+      toast({ title: "Welcome back", description: `Signed in as ${user.full_name}` });
+      const from = (location.state as { from?: string } | null)?.from;
+      if (from) return navigate(from, { replace: true });
+      // Role-based redirect
+      if (user.role === "admin") navigate("/admin", { replace: true });
+      else if (user.role === "editor") navigate("/admin/inquiries", { replace: true });
+      else navigate("/", { replace: true });
+    } catch (err) {
+      toast({
+        title: "Login failed",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
