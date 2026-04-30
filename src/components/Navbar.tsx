@@ -408,13 +408,38 @@ const Navbar = () => {
                 </Link>
               )
             )}
-            <Link
-              to="/login"
-              onClick={() => setMenuOpen(false)}
-              className="block mt-3 border border-accent text-accent text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
-            >
-              Login / Register
-            </Link>
+            {user ? (
+              <>
+                <div className="mt-3 px-3 py-2 rounded-lg bg-muted border border-border">
+                  <p className="text-xs text-muted-foreground">Signed in as</p>
+                  <p className="text-sm font-semibold text-primary truncate">{user.full_name}</p>
+                  <p className="text-xs text-accent uppercase tracking-wider">{user.role}</p>
+                </div>
+                {(user.role === "admin" || user.role === "editor") && (
+                  <Link
+                    to={user.role === "admin" ? "/admin" : "/admin/inquiries"}
+                    onClick={() => setMenuOpen(false)}
+                    className="block mt-2 border border-accent text-accent text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="w-full mt-2 border border-destructive text-destructive text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className="block mt-3 border border-accent text-accent text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
+              >
+                Login / Register
+              </Link>
+            )}
             <Link
               to="/contact"
               onClick={() => setMenuOpen(false)}
