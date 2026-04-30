@@ -1,33 +1,63 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, User, Phone, Building2, UserPlus, Shield } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock, User, Phone, Building2, UserPlus, Shield, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [enable2FA, setEnable2FA] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    fullName: "", email: "", phone: "", password: "", confirmPassword: "", role: "client", companyName: "",
+    fullName: "", email: "", phone: "", password: "", confirmPassword: "", role: "user", companyName: "",
   });
   const { toast } = useToast();
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
       toast({ title: "Error", description: "Passwords do not match.", variant: "destructive" });
       return;
     }
-    toast({ title: "Registration Attempted", description: "Backend integration required for authentication." });
+    if (form.password.length < 8) {
+      toast({ title: "Weak password", description: "Password must be at least 8 characters.", variant: "destructive" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const user = await register({
+        full_name: form.fullName,
+        email: form.email,
+        phone: form.phone || undefined,
+        password: form.password,
+        role: form.role,
+        company_name: form.companyName || undefined,
+        two_factor_enabled: enable2FA,
+      });
+      toast({ title: "Account created", description: `Welcome, ${user.full_name}!` });
+      if (user.role === "admin") navigate("/admin", { replace: true });
+      else navigate("/", { replace: true });
+    } catch (err) {
+      toast({
+        title: "Registration failed",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -120,8 +150,8 @@ const Register = () => {
                 <div>
                   <Label htmlFor="role">Role</Label>
                   <select id="role" name="role" value={form.role} onChange={handleChange} className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                    <option value="client">Client</option>
-                    <option value="developer">Developer</option>
+                    <option value="user">User / Client</option>
+                    <option value="editor">Editor</option>
                     <option value="admin">Admin</option>
                   </select>
                 </div>
@@ -157,8 +187,8 @@ const Register = () => {
                 </span>
               </div>
 
-              <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 h-11">
-                Create Account
+              <Button type="submit" disabled={submitting} className="w-full bg-accent text-accent-foreground hover:bg-accent/90 h-11">
+                {submitting ? <Loader2 className="animate-spin" size={18} /> : "Create Account"}
               </Button>
             </form>
 
