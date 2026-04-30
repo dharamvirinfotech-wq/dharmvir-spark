@@ -7,7 +7,7 @@ async function migrate() {
     DB_PORT = 3306,
     DB_USER = 'root',
     DB_PASSWORD = '',
-    DB_NAME = 'dv_auth',
+    DB_NAME = 'dvitlive',
   } = process.env;
 
   const root = await mysql.createConnection({

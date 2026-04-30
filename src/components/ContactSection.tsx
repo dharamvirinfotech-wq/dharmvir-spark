@@ -35,7 +35,7 @@ const ContactSection = () => {
                 </div>
                 <div>
                   <h4 className="font-display font-semibold text-primary mb-1">Phone</h4>
-                  <p className="text-muted-foreground text-sm">+91 98765 43210</p>
+                  <p className="text-muted-foreground text-sm">+91 8750 299 299</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -53,7 +53,7 @@ const ContactSection = () => {
                 </div>
                 <div>
                   <h4 className="font-display font-semibold text-primary mb-1">Address</h4>
-                  <p className="text-muted-foreground text-sm">New Delhi, India</p>
+                  <p className="text-muted-foreground text-sm">Rani Laxmibai Nagar, Yusufpur, Center, Greater Noida, Chipyana Khurd Urf Tigri, Uttar Pradesh 201009, India</p>
                 </div>
               </div>
             </div>

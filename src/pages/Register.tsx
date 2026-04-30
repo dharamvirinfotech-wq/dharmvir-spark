@@ -129,7 +129,7 @@ const Register = () => {
                 <Label htmlFor="phone">Phone Number</Label>
                 <div className="relative mt-1">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                  <Input id="phone" name="phone" type="tel" placeholder="+91 98765 43210" className="pl-10" value={form.phone} onChange={handleChange} required />
+                  <Input id="phone" name="phone" type="tel" placeholder="+91 8750 299 299" className="pl-10" value={form.phone} onChange={handleChange} required />
                 </div>
               </div>
 

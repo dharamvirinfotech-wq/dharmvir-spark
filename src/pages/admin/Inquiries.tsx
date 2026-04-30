@@ -44,11 +44,11 @@ interface Inquiry {
 }
 
 const seed: Inquiry[] = [
-  { id: "1", name: "Rahul Sharma", email: "rahul@example.com", phone: "+91 98765 43210", subject: "Need a quote for new website", service: "Web Development", message: "Hi, we are looking to build a corporate website with 10 pages. Please share a quote and timeline.", date: "2026-04-30 10:24", status: "New" },
-  { id: "2", name: "Priya Patel", email: "priya@example.com", phone: "+91 98123 45678", subject: "Mobile App for Food Delivery", service: "Mobile App", message: "We need an iOS + Android app similar to Swiggy. Can we schedule a discovery call?", date: "2026-04-30 08:10", status: "Replied" },
-  { id: "3", name: "Amit Kumar", email: "amit@example.com", phone: "+91 90011 22334", subject: "SEO audit request", service: "SEO Services", message: "Our rankings have dropped. Please run a free SEO audit on our domain.", date: "2026-04-29 17:42", status: "New" },
-  { id: "4", name: "Sarah Wilson", email: "sarah@example.com", phone: "+1 415 555 0192", subject: "AI chatbot for ecommerce", service: "AI Development", message: "Looking to integrate an AI customer support chatbot on our Shopify store.", date: "2026-04-28 14:05", status: "Closed" },
-  { id: "5", name: "Kunal Mehta", email: "kunal@brandify.in", phone: "+91 99887 76655", subject: "Hire React developer", service: "Hire Developer", message: "We need a senior React developer for 3 months on a dedicated basis.", date: "2026-04-27 11:30", status: "Replied" },
+  { id: "1", name: "Rahul Sharma", email: "rahul@example.com", phone: "+91 8750 299 299", subject: "Need a quote for new website", service: "Web Development", message: "Hi, we are looking to build a corporate website with 10 pages. Please share a quote and timeline.", date: "2026-04-30 10:24", status: "New" },
+  { id: "2", name: "Priya Patel", email: "priya@example.com", phone: "+91 8750 299 299", subject: "Mobile App for Food Delivery", service: "Mobile App", message: "We need an iOS + Android app similar to Swiggy. Can we schedule a discovery call?", date: "2026-04-30 08:10", status: "Replied" },
+  { id: "3", name: "Amit Kumar", email: "amit@example.com", phone: "+91 8750 299 299", subject: "SEO audit request", service: "SEO Services", message: "Our rankings have dropped. Please run a free SEO audit on our domain.", date: "2026-04-29 17:42", status: "New" },
+  { id: "4", name: "Sarah Wilson", email: "sarah@example.com", phone: "+91 8750 299 299", subject: "AI chatbot for ecommerce", service: "AI Development", message: "Looking to integrate an AI customer support chatbot on our Shopify store.", date: "2026-04-28 14:05", status: "Closed" },
+  { id: "5", name: "Kunal Mehta", email: "kunal@brandify.in", phone: "+91 8750 299 299", subject: "Hire React developer", service: "Hire Developer", message: "We need a senior React developer for 3 months on a dedicated basis.", date: "2026-04-27 11:30", status: "Replied" },
 ];
 
 const Inquiries = () => {

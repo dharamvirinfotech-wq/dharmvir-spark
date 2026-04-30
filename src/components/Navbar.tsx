@@ -184,7 +184,7 @@ const Navbar = () => {
               href="tel:+919876543210"
               className="flex items-center gap-2 hover:text-accent transition-colors"
             >
-              <Phone size={14} /> +91 98765 43210
+              <Phone size={14} /> +91 8750 299 299
             </a>
             <a
               href="mailto:info@dharamvirinfotech.com"

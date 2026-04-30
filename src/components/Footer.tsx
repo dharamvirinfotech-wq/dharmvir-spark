@@ -44,9 +44,9 @@ const Footer = () => {
               Contact Info
             </h4>
             <ul className="space-y-2.5 text-sm text-primary-foreground/60">
-              <li>+91 98765 43210</li>
+              <li>+91 8750-299-299</li>
               <li>info@dharamvirinfotech.com</li>
-              <li>New Delhi, India</li>
+              <li>Rani Laxmibai Nagar, Yusufpur, Center, Greater Noida, Chipyana Khurd Urf Tigri, Uttar Pradesh 201009, India</li>
             </ul>
           </div>
         </div>
