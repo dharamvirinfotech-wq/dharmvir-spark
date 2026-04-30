@@ -36,8 +36,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = tokenStore.get();
   if (token) {
-    config.headers = config.headers ?? {};
-    (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
+    config.headers.set("Authorization", `Bearer ${token}`);
   }
   return config;
 });
