@@ -23,6 +23,7 @@ import { Switch } from "@/components/ui/switch";
 const sidebarLinks = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
   { label: "Users", icon: UsersIcon, href: "/admin/users" },
+  { label: "Roles", icon: Shield, href: "/admin/roles" },
   { label: "Pages", icon: FileText, href: "/admin/pages" },
   { label: "Inquiries", icon: Mail, href: "/admin/inquiries" },
   { label: "Analytics", icon: BarChart3, href: "/admin/analytics" },

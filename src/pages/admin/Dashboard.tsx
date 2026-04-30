@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   LayoutDashboard, Users, FileText, Settings, LogOut, Menu, X,
-  TrendingUp, Eye, UserPlus, DollarSign, BarChart3, Globe, Mail, Bell
+  TrendingUp, Eye, UserPlus, DollarSign, BarChart3, Globe, Mail, Bell, ShieldCheck
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 const sidebarLinks = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
   { label: "Users", icon: Users, href: "/admin/users" },
+  { label: "Roles", icon: ShieldCheck, href: "/admin/roles" },
   { label: "Pages", icon: FileText, href: "/admin/pages" },
   { label: "Inquiries", icon: Mail, href: "/admin/inquiries" },
   { label: "Analytics", icon: BarChart3, href: "/admin/analytics" },

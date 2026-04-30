@@ -44,6 +44,7 @@ export const rolePanels: Record<string, RolePanelConfig> = {
     links: [
       { label: "Dashboard", icon: LayoutDashboard, href: "/panel/admin" },
       { label: "Users", icon: Users, href: "/admin/users" },
+      { label: "Roles", icon: ShieldCheck, href: "/admin/roles" },
       { label: "Inquiries", icon: Mail, href: "/admin/inquiries" },
       { label: "Pages", icon: FileText, href: "/panel/admin/pages" },
       { label: "Analytics", icon: BarChart3, href: "/panel/admin/analytics" },
