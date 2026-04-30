@@ -107,8 +107,8 @@ const Login = () => {
                 <Link to="/forgot-password" className="text-accent hover:underline font-medium">Forgot Password?</Link>
               </div>
 
-              <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 h-11">
-                Sign In
+              <Button type="submit" disabled={submitting} className="w-full bg-accent text-accent-foreground hover:bg-accent/90 h-11">
+                {submitting ? <Loader2 className="animate-spin" size={18} /> : "Sign In"}
               </Button>
             </form>
 
