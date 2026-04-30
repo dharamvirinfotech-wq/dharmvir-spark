@@ -413,15 +413,13 @@ const Navbar = () => {
                   <p className="text-sm font-semibold text-primary truncate">{user.full_name}</p>
                   <p className="text-xs text-accent uppercase tracking-wider">{user.role}</p>
                 </div>
-                {(user.role === "admin" || user.role === "editor") && (
-                  <Link
-                    to={user.role === "admin" ? "/admin" : "/admin/inquiries"}
-                    onClick={() => setMenuOpen(false)}
-                    className="block mt-2 border border-accent text-accent text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
-                  >
-                    Admin Panel
-                  </Link>
-                )}
+                <Link
+                  to="/panel"
+                  onClick={() => setMenuOpen(false)}
+                  className="block mt-2 border border-accent text-accent text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
+                >
+                  My Panel
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full mt-2 border border-destructive text-destructive text-center px-6 py-2.5 rounded-lg text-sm font-semibold"
