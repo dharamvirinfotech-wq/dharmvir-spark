@@ -24,7 +24,6 @@ const sidebarLinks = [
   { label: "Roles", icon: ShieldCheck, href: "/admin/roles" },
   { label: "Pages", icon: FileText, href: "/admin/pages" },
   { label: "Inquiries", icon: Mail, href: "/admin/inquiries" },
-  { label: "Analytics", icon: BarChart3, href: "/admin/analytics" },
   { label: "Settings", icon: SettingsIcon, href: "/admin/settings" },
 ];
 
