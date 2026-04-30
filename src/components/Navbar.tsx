@@ -263,12 +263,59 @@ const Navbar = () => {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              to="/login"
-              className="inline-flex items-center gap-2 border border-accent text-accent px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent hover:text-accent-foreground transition-colors"
-            >
-              <LogIn size={16} /> Login
-            </Link>
+            {user ? (
+              <div
+                className="relative"
+                onMouseEnter={() => setUserMenuOpen(true)}
+                onMouseLeave={() => setUserMenuOpen(false)}
+              >
+                <button className="inline-flex items-center gap-2 border border-border bg-muted/40 px-3 py-2 rounded-lg text-sm font-semibold text-foreground hover:bg-muted transition-colors">
+                  <UserCircle size={18} className="text-accent" />
+                  <span className="max-w-[140px] truncate">{user.full_name}</span>
+                  <span className="text-[10px] uppercase tracking-wider bg-accent/10 text-accent px-1.5 py-0.5 rounded">
+                    {user.role}
+                  </span>
+                  <ChevronDown size={14} />
+                </button>
+                <div
+                  className={`absolute right-0 top-full pt-3 transition-all duration-200 ${
+                    userMenuOpen
+                      ? "opacity-100 visible translate-y-0"
+                      : "opacity-0 invisible -translate-y-2"
+                  }`}
+                >
+                  <div className="w-56 bg-background rounded-xl shadow-2xl border border-border p-2">
+                    <div className="px-3 py-2 border-b border-border mb-1">
+                      <p className="text-xs text-muted-foreground">Signed in as</p>
+                      <p className="text-sm font-semibold text-primary truncate">{user.email}</p>
+                    </div>
+                    {(user.role === "admin" || user.role === "editor") && (
+                      <Link
+                        to={user.role === "admin" ? "/admin" : "/admin/inquiries"}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted"
+                      >
+                        <LayoutDashboard size={16} className="text-accent" />
+                        Admin Panel
+                      </Link>
+                    )}
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-destructive/10"
+                    >
+                      <LogOut size={16} />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 border border-accent text-accent px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent hover:text-accent-foreground transition-colors"
+              >
+                <LogIn size={16} /> Login
+              </Link>
+            )}
             <Link
               to="/contact"
               className="inline-flex bg-accent text-accent-foreground px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent/90 transition-colors"
