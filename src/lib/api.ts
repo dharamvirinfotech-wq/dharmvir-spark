@@ -79,4 +79,51 @@ export const contactApi = {
     api.delete<{ message: string }>(`/contact/${id}`).then((r) => r.data),
 };
 
+export type ExpertCategory = "services" | "technologies" | "hire" | "promotion" | "general";
+
+export type ExpertRequest = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  company: string | null;
+  category: ExpertCategory;
+  topic: string | null;
+  budget: string | null;
+  timeline: string | null;
+  message: string | null;
+  source_page: string | null;
+  status: "new" | "contacted" | "scheduled" | "closed";
+  admin_notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export const expertsApi = {
+  submit: (payload: {
+    name: string;
+    email: string;
+    phone?: string;
+    company?: string;
+    category?: ExpertCategory;
+    topic?: string;
+    budget?: string;
+    timeline?: string;
+    message?: string;
+    source_page?: string;
+  }) => api.post<{ id: number; message: string }>("/experts", payload).then((r) => r.data),
+
+  list: (params?: { status?: string; category?: string; search?: string }) =>
+    api.get<{ requests: ExpertRequest[] }>("/experts", { params }).then((r) => r.data),
+
+  get: (id: number) =>
+    api.get<{ request: ExpertRequest }>(`/experts/${id}`).then((r) => r.data),
+
+  update: (id: number, payload: { status?: string; admin_notes?: string }) =>
+    api.patch<{ request: ExpertRequest }>(`/experts/${id}`, payload).then((r) => r.data),
+
+  remove: (id: number) =>
+    api.delete<{ message: string }>(`/experts/${id}`).then((r) => r.data),
+};
+
 export default api;

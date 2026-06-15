@@ -14,6 +14,7 @@ const authRoutes = require('./routes/auth.routes');
 const oauthRoutes = require('./routes/oauth.routes');
 const userRoutes = require('./routes/user.routes');
 const contactRoutes = require('./routes/contact.routes');
+const expertRoutes = require('./routes/expert.routes');
 const { notFound, errorHandler } = require('./middleware/error');
 const { testConnection } = require('./db/pool');
 const { configurePassport } = require('./auth/passport');
@@ -58,6 +59,7 @@ app.use('/api/auth', oauthRoutes);
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/experts', expertRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

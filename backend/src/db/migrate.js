@@ -98,6 +98,32 @@ async function migrate() {
     ) ENGINE=InnoDB;
   `);
 
+  // Talk To Experts consultation requests (from mega-menu CTA)
+  await root.query(`
+    CREATE TABLE IF NOT EXISTS expert_requests (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(150) NOT NULL,
+      email VARCHAR(190) NOT NULL,
+      phone VARCHAR(30) DEFAULT NULL,
+      company VARCHAR(150) DEFAULT NULL,
+      category ENUM('services','technologies','hire','promotion','general') NOT NULL DEFAULT 'general',
+      topic VARCHAR(190) DEFAULT NULL,
+      budget VARCHAR(50) DEFAULT NULL,
+      timeline VARCHAR(50) DEFAULT NULL,
+      message TEXT DEFAULT NULL,
+      source_page VARCHAR(255) DEFAULT NULL,
+      status ENUM('new','contacted','scheduled','closed') NOT NULL DEFAULT 'new',
+      admin_notes TEXT DEFAULT NULL,
+      ip_address VARCHAR(64) DEFAULT NULL,
+      user_agent VARCHAR(500) DEFAULT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      INDEX idx_exp_status (status),
+      INDEX idx_exp_category (category),
+      INDEX idx_exp_created (created_at)
+    ) ENGINE=InnoDB;
+  `);
+
   console.log(`Migration complete on database "${DB_NAME}"`);
   await root.end();
 }
