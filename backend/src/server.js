@@ -7,6 +7,9 @@ const rateLimit = require('express-rate-limit');
 const session = require('express-session');
 const passport = require('passport');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
+
 const authRoutes = require('./routes/auth.routes');
 const oauthRoutes = require('./routes/oauth.routes');
 const userRoutes = require('./routes/user.routes');
@@ -45,6 +48,10 @@ const authLimiter = rateLimit({
 });
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
+// Swagger UI: http://localhost:4000/api/docs   |   raw spec: /api/docs.json
+app.get('/api/docs.json', (_req, res) => res.json(swaggerSpec));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
 // OAuth routes are NOT rate-limited the same way (the provider redirect chain hits us repeatedly)
 app.use('/api/auth', oauthRoutes);
