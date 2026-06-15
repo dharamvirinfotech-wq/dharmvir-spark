@@ -59,6 +59,7 @@ app.use('/api/auth', oauthRoutes);
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/experts', expertRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
