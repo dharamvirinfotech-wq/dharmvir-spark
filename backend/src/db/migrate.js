@@ -124,6 +124,40 @@ async function migrate() {
     ) ENGINE=InnoDB;
   `);
 
+  // Hire Developer requests (from DeveloperProfile sticky form) with live geolocation
+  await root.query(`
+    CREATE TABLE IF NOT EXISTS hire_requests (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT DEFAULT NULL,
+      developer_slug VARCHAR(150) NOT NULL,
+      developer_name VARCHAR(150) NOT NULL,
+      developer_role VARCHAR(150) DEFAULT NULL,
+      name VARCHAR(150) NOT NULL,
+      email VARCHAR(190) NOT NULL,
+      phone VARCHAR(30) DEFAULT NULL,
+      company VARCHAR(150) DEFAULT NULL,
+      engagement_type ENUM('full-time','part-time','contract','project-based') NOT NULL DEFAULT 'full-time',
+      budget VARCHAR(50) DEFAULT NULL,
+      timeline VARCHAR(50) DEFAULT NULL,
+      project_description TEXT NOT NULL,
+      latitude DECIMAL(10,7) DEFAULT NULL,
+      longitude DECIMAL(10,7) DEFAULT NULL,
+      location_accuracy DECIMAL(10,2) DEFAULT NULL,
+      location_address VARCHAR(500) DEFAULT NULL,
+      status ENUM('new','contacted','scheduled','closed') NOT NULL DEFAULT 'new',
+      admin_notes TEXT DEFAULT NULL,
+      ip_address VARCHAR(64) DEFAULT NULL,
+      user_agent VARCHAR(500) DEFAULT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      INDEX idx_hire_status (status),
+      INDEX idx_hire_dev (developer_slug),
+      INDEX idx_hire_user (user_id),
+      INDEX idx_hire_created (created_at),
+      CONSTRAINT fk_hire_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    ) ENGINE=InnoDB;
+  `);
+
   console.log(`Migration complete on database "${DB_NAME}"`);
   await root.end();
 }
