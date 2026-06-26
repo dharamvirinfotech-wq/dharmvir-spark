@@ -361,6 +361,18 @@ const DeveloperProfile = () => {
                       className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent resize-none"
                       placeholder="Describe your project requirements..." />
                   </div>
+                  <div className="flex items-start gap-2 text-xs text-muted-foreground bg-muted/40 border border-border rounded-lg px-3 py-2">
+                    <MapPin size={14} className="mt-0.5 shrink-0" />
+                    <span>
+                      {geoStatus === "loading" && "Detecting your location…"}
+                      {geoStatus === "ready" && geo && (
+                        <>Location attached: {geo.address ? geo.address : `${geo.latitude.toFixed(4)}, ${geo.longitude.toFixed(4)}`}</>
+                      )}
+                      {geoStatus === "denied" && "Location permission denied — request will be submitted without location."}
+                      {geoStatus === "unsupported" && "Geolocation unsupported by this browser."}
+                      {geoStatus === "idle" && "Live location will be attached to your request."}
+                    </span>
+                  </div>
                   <button type="submit" disabled={isSubmitting}
                     className="w-full bg-accent text-accent-foreground py-3 rounded-lg font-semibold hover:bg-accent/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
                     <Send size={16} />
