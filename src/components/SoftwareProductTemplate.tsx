@@ -83,9 +83,16 @@ const SoftwareProductTemplate = ({ data }: { data: SoftwareProductData }) => {
     },
     review: reviews.map((r) => ({
       "@type": "Review",
+      name: r.title || `${r.name}'s Review`,
       author: { "@type": "Person", name: r.name },
+      datePublished: r.date,
       reviewBody: r.quote,
-      reviewRating: { "@type": "Rating", ratingValue: 5, bestRating: 5 },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: r.rating ?? rating,
+        bestRating: 5,
+        worstRating: 1,
+      },
     })),
   };
 
