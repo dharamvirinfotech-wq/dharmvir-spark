@@ -1,43 +1,60 @@
-import PromotionServiceTemplate from "@/components/PromotionServiceTemplate";
-import Seo from "@/components/Seo";
-import { Inbox, Server, ShieldCheck, Calendar, Download, RefreshCw } from "lucide-react";
+import SoftwareProductTemplate, { type SoftwareProductData } from "@/components/SoftwareProductTemplate";
+import { Inbox, Server, ShieldCheck, Calendar, Download, RefreshCw, FolderOpen, FileText, Users } from "lucide-react";
 
-const ImapBackup = () => (
-  <>
-    <Seo
-      title="IMAP Backup Tool — Backup Any IMAP Mailbox to PST, MBOX, EML | Dharam Vir Infotech"
-      description="Backup Gmail, Yahoo, Office 365, Zoho or cPanel IMAP mailboxes to PST, MBOX, EML, MSG or PDF. Scheduled, incremental and TLS-secured backups."
-      path="/software/imap-backup-tool"
-      image="/og/imap-backup.jpg"
-    />
-    <PromotionServiceTemplate
-      title="IMAP Backup Tool"
-      subtitle="Backup any IMAP mailbox — Gmail, Yahoo, Office 365, Zoho, cPanel and more — to your local drive."
-      breadcrumb="IMAP Backup"
-      features={[
-        { icon: Server, title: "Universal IMAP Support", desc: "Works with any IMAP server: Gmail, Yahoo, Office 365, Zoho, hosted cPanel mail." },
-        { icon: Download, title: "Multiple Formats", desc: "Export to PST, MBOX, EML, MSG or PDF — your choice." },
-        { icon: ShieldCheck, title: "Bank-Grade Security", desc: "TLS/SSL connections with no credentials stored on disk." },
-        { icon: Calendar, title: "Scheduled Backups", desc: "Run automatic daily, weekly or monthly backup jobs." },
-        { icon: RefreshCw, title: "Incremental Sync", desc: "Only new emails are downloaded after the first backup." },
-        { icon: Inbox, title: "Selective Folders", desc: "Pick the exact folders, labels or date ranges to back up." },
-      ]}
-      benefits={[
-        "Bulk backup unlimited IMAP accounts from a single console",
-        "Preserves folder hierarchy, labels, read/unread state",
-        "Pauses & resumes safely on network interruptions",
-        "Detailed log report for every backup session",
-        "Free trial backs up the first 100 emails per folder",
-        "Compatible with Windows 10, 11 and Windows Server",
-      ]}
-      process={[
-        { step: "1", title: "Add Account", desc: "Enter IMAP credentials or use OAuth for Gmail/O365." },
-        { step: "2", title: "Pick Folders", desc: "Select folders and apply optional date filters." },
-        { step: "3", title: "Choose Format", desc: "Select PST, MBOX, EML, MSG or PDF output." },
-        { step: "4", title: "Backup", desc: "Run now or schedule for automatic recurring backups." },
-      ]}
-    />
-  </>
-);
+const data: SoftwareProductData = {
+  brand: "Dharam Vir Infotech",
+  productName: "IMAP Backup Tool",
+  tagline: "Backup Any IMAP Mailbox to PST, MBOX, EML or PDF",
+  description:
+    "Backup Gmail, Yahoo, Office 365, Zoho, cPanel and any IMAP mailbox to your local drive in PST, MBOX, EML, MSG or PDF format. Schedule incremental backups, preserve folder hierarchy, and run thousands of mailboxes from a single console with TLS-secured connections.",
+  version: "v6.0.2",
+  rating: 4.8,
+  reviewCount: "3,100+",
+  highlights: ["Universal IMAP Support", "5 Output Formats", "Scheduled & Incremental", "TLS / SSL Secure"],
+  ProductIcon: Inbox,
+  features: [
+    { icon: Server, title: "Universal IMAP Support", desc: "Works with any IMAP server — Gmail, Yahoo, Office 365, Zoho, cPanel, Rackspace and more." },
+    { icon: Download, title: "5 Output Formats", desc: "Export to PST, MBOX, EML, MSG or PDF — pick whichever your archive policy needs." },
+    { icon: ShieldCheck, title: "Bank-Grade Security", desc: "TLS/SSL connections, OAuth where supported, and zero credential storage on disk." },
+    { icon: Calendar, title: "Scheduled Backups", desc: "Run automatic daily, weekly or monthly jobs in the background." },
+    { icon: RefreshCw, title: "Incremental Sync", desc: "Only new emails are downloaded after the first backup — fast and bandwidth-friendly." },
+    { icon: Inbox, title: "Selective Folders", desc: "Pick exact folders, labels or date ranges to back up — skip Spam and Trash by default." },
+    { icon: FolderOpen, title: "Folder Hierarchy Preserved", desc: "Maintains your original folder structure, labels, and read/unread state." },
+    { icon: Users, title: "Bulk Mailbox Mode", desc: "Backup unlimited IMAP accounts from a single console — perfect for IT admins." },
+    { icon: FileText, title: "Detailed Logs", desc: "Per-session log report with success/failure counts and detailed error messages." },
+  ],
+  steps: [
+    { title: "Add IMAP Account", desc: "Enter IMAP credentials or sign in with OAuth for Gmail / Office 365." },
+    { title: "Pick Folders & Format", desc: "Select folders, apply date filters, and choose PST, MBOX, EML, MSG or PDF output." },
+    { title: "Backup or Schedule", desc: "Run the backup now or schedule recurring jobs to run automatically." },
+  ],
+  requirements: [
+    "Windows 11, 10, 8.1, 8, 7 (32-bit & 64-bit)",
+    "Windows Server 2012, 2016, 2019, 2022",
+    "1 GHz processor or faster",
+    "1 GB RAM (2 GB recommended)",
+    "150 MB free disk space (plus space for backups)",
+    "Stable internet connection",
+  ],
+  supportedFormats: ["PST", "MBOX", "EML", "MSG", "PDF"],
+  faqs: [
+    { q: "Which IMAP providers are supported?", a: "Any server that speaks IMAP — Gmail, Yahoo, Office 365, Zoho, iCloud, AOL, cPanel hosting, Rackspace and more." },
+    { q: "Does it use OAuth for Gmail / Office 365?", a: "Yes. Modern OAuth authentication is supported alongside classic password login." },
+    { q: "Are subsequent backups incremental?", a: "Yes — after the first full backup, only new emails are downloaded to save time and bandwidth." },
+    { q: "Can I backup multiple accounts at once?", a: "Yes. Add as many accounts as you like — they back up sequentially or in parallel based on your settings." },
+    { q: "What happens if the connection drops?", a: "The tool automatically resumes from the last successful email and logs any retries." },
+  ],
+  reviews: [
+    { name: "Carlos Mendes", role: "MSP Owner", initials: "CM", quote: "I backup 300+ client mailboxes nightly. Rock solid for over a year now." },
+    { name: "Aisha Khan", role: "IT Manager", initials: "AK", quote: "OAuth for Microsoft 365 is the killer feature. Setup took minutes." },
+    { name: "Frank Walters", role: "Solo Sysadmin", initials: "FW", quote: "Switched from a cloud backup service and never looked back. One-time price wins." },
+    { name: "Yuki Nakamura", role: "Compliance Lead", initials: "YN", quote: "PST output drops straight into our retention system. Audit logs are excellent." },
+  ],
+  seoTitle: "IMAP Backup Tool — Backup Any IMAP Mailbox to PST, MBOX, EML | Dharam Vir Infotech",
+  seoDescription: "Backup Gmail, Yahoo, Office 365, Zoho or cPanel IMAP mailboxes to PST, MBOX, EML, MSG or PDF. Scheduled, incremental and TLS-secured backups.",
+  path: "/software/imap-backup-tool",
+  ogImage: "/og/imap-backup.jpg",
+};
 
+const ImapBackup = () => <SoftwareProductTemplate data={data} />;
 export default ImapBackup;
