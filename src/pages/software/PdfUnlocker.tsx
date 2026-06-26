@@ -36,7 +36,8 @@ const PdfUnlocker = () => (
       { step: "3", title: "Unlock", desc: "Click Unlock — restrictions are removed instantly." },
       { step: "4", title: "Save", desc: "Save the unrestricted PDFs to any location." },
     ]}
-  />
+    />
+  </>
 );
 
 export default PdfUnlocker;
