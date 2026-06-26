@@ -235,6 +235,14 @@ const HireRequests = () => {
               </SelectContent>
             </Select>
             <Button onClick={fetchData} variant="secondary">Apply</Button>
+            <Button
+              variant="outline"
+              onClick={() => exportToCSV(requests, "hire-requests.csv")}
+              disabled={requests.length === 0}
+              className="gap-2"
+            >
+              <Download className="h-4 w-4" /> Export CSV
+            </Button>
           </CardContent>
         </Card>
 
