@@ -1,6 +1,11 @@
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { pool } = require('../db/pool');
+const {
+  sendMail,
+  renderUserConfirmation,
+  renderInternalNotification,
+} = require('../utils/mailer');
 
 // Public: submit a "Hire Developer" request. Also auto-creates a user account
 // if one doesn't already exist for the provided email.
