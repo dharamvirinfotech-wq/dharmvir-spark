@@ -1,10 +1,11 @@
 import { useParams, useSearchParams, Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import PageBanner from "@/components/PageBanner";
 import Footer from "@/components/Footer";
 import { Star, MapPin, Briefcase, DollarSign, CheckCircle, Clock, Globe, Award, Send } from "lucide-react";
 import { toast } from "sonner";
+import { hireApi } from "@/lib/api";
 
 interface DeveloperData {
   name: string;
@@ -94,6 +95,37 @@ const DeveloperProfile = () => {
     engagementType: "full-time",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [geo, setGeo] = useState<{ latitude: number; longitude: number; accuracy: number; address?: string | null } | null>(null);
+  const [geoStatus, setGeoStatus] = useState<"idle" | "loading" | "ready" | "denied" | "unsupported">("idle");
+
+  // Request live location on mount (non-blocking)
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setGeoStatus("unsupported");
+      return;
+    }
+    setGeoStatus("loading");
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        let address: string | null = null;
+        try {
+          const r = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=14`,
+            { headers: { Accept: "application/json" } }
+          );
+          if (r.ok) {
+            const j = await r.json();
+            address = (j?.display_name as string) || null;
+          }
+        } catch { /* ignore reverse-geocode errors */ }
+        setGeo({ latitude, longitude, accuracy, address });
+        setGeoStatus("ready");
+      },
+      () => setGeoStatus("denied"),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  }, []);
 
   if (!dev) {
     return (
@@ -113,16 +145,39 @@ const DeveloperProfile = () => {
 
   const devWithRole = { ...dev, role };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await hireApi.submit({
+        developer_slug: slug || "",
+        developer_name: devWithRole.name,
+        developer_role: devWithRole.role,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        company: formData.company || undefined,
+        engagement_type: formData.engagementType as "full-time" | "part-time" | "contract" | "project-based",
+        budget: formData.budget || undefined,
+        timeline: formData.timeline || undefined,
+        project_description: formData.projectDescription,
+        latitude: geo?.latitude ?? null,
+        longitude: geo?.longitude ?? null,
+        location_accuracy: geo?.accuracy ?? null,
+        location_address: geo?.address ?? null,
+      });
       toast.success("Hire request submitted successfully!", {
-        description: `We'll get back to you within 24 hours about hiring ${devWithRole.name}.`,
+        description: res.user_created
+          ? `Account created for ${formData.email}. We'll reach out within 24 hours.`
+          : `We'll get back to you within 24 hours about hiring ${devWithRole.name}.`,
       });
       setFormData({ name: "", email: "", phone: "", company: "", projectDescription: "", budget: "", timeline: "", engagementType: "full-time" });
-    }, 1500);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to submit hire request";
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -305,6 +360,18 @@ const DeveloperProfile = () => {
                     <textarea name="projectDescription" value={formData.projectDescription} onChange={handleChange} required rows={4}
                       className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent resize-none"
                       placeholder="Describe your project requirements..." />
+                  </div>
+                  <div className="flex items-start gap-2 text-xs text-muted-foreground bg-muted/40 border border-border rounded-lg px-3 py-2">
+                    <MapPin size={14} className="mt-0.5 shrink-0" />
+                    <span>
+                      {geoStatus === "loading" && "Detecting your location…"}
+                      {geoStatus === "ready" && geo && (
+                        <>Location attached: {geo.address ? geo.address : `${geo.latitude.toFixed(4)}, ${geo.longitude.toFixed(4)}`}</>
+                      )}
+                      {geoStatus === "denied" && "Location permission denied — request will be submitted without location."}
+                      {geoStatus === "unsupported" && "Geolocation unsupported by this browser."}
+                      {geoStatus === "idle" && "Live location will be attached to your request."}
+                    </span>
                   </div>
                   <button type="submit" disabled={isSubmitting}
                     className="w-full bg-accent text-accent-foreground py-3 rounded-lg font-semibold hover:bg-accent/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
