@@ -144,7 +144,7 @@ async function migrate() {
       longitude DECIMAL(10,7) DEFAULT NULL,
       location_accuracy DECIMAL(10,2) DEFAULT NULL,
       location_address VARCHAR(500) DEFAULT NULL,
-      status ENUM('new','contacted','scheduled','closed') NOT NULL DEFAULT 'new',
+      status ENUM('new','contacted','scheduled','approved','rejected','completed','closed') NOT NULL DEFAULT 'new',
       admin_notes TEXT DEFAULT NULL,
       ip_address VARCHAR(64) DEFAULT NULL,
       user_agent VARCHAR(500) DEFAULT NULL,
@@ -157,6 +157,16 @@ async function migrate() {
       CONSTRAINT fk_hire_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
     ) ENGINE=InnoDB;
   `);
+
+  // Idempotent column-widen for existing databases that were migrated before
+  // the approve/reject/complete statuses were introduced.
+  try {
+    await root.query(`
+      ALTER TABLE hire_requests
+      MODIFY COLUMN status ENUM('new','contacted','scheduled','approved','rejected','completed','closed')
+      NOT NULL DEFAULT 'new'
+    `);
+  } catch (e) { /* ignore if already up to date */ }
 
   console.log(`Migration complete on database "${DB_NAME}"`);
   await root.end();
