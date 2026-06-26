@@ -106,6 +106,12 @@ import ChatbotMarketing from "./pages/promotion/ChatbotMarketing.tsx";
 import PredictiveMarketing from "./pages/promotion/PredictiveMarketing.tsx";
 import AiAdOptimization from "./pages/promotion/AiAdOptimization.tsx";
 import AiEmailAutomation from "./pages/promotion/AiEmailAutomation.tsx";
+import Software from "./pages/Software.tsx";
+import PdfUnlocker from "./pages/software/PdfUnlocker.tsx";
+import PdfBatesNumbering from "./pages/software/PdfBatesNumbering.tsx";
+import MboxToPdf from "./pages/software/MboxToPdf.tsx";
+import ImapBackup from "./pages/software/ImapBackup.tsx";
+import GmailBackup from "./pages/software/GmailBackup.tsx";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -201,6 +207,16 @@ const App = () => (
           <Route path="/promotion/predictive-marketing" element={<PredictiveMarketing />} />
           <Route path="/promotion/ai-ad-optimization" element={<AiAdOptimization />} />
           <Route path="/promotion/ai-email-automation" element={<AiEmailAutomation />} />
+          <Route path="/software" element={<Software />} />
+          <Route path="/software/pdf-tools" element={<Software />} />
+          <Route path="/software/email-migration" element={<Software />} />
+          <Route path="/software/imap-backup" element={<Software />} />
+          <Route path="/software/gmail-backup" element={<Software />} />
+          <Route path="/software/pdf-unlocker" element={<PdfUnlocker />} />
+          <Route path="/software/pdf-bates-numbering" element={<PdfBatesNumbering />} />
+          <Route path="/software/mbox-to-pdf" element={<MboxToPdf />} />
+          <Route path="/software/imap-backup-tool" element={<ImapBackup />} />
+          <Route path="/software/gmail-backup-tool" element={<GmailBackup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
