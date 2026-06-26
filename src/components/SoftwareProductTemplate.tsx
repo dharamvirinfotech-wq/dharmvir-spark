@@ -32,7 +32,7 @@ export type SoftwareProductData = {
   requirements: string[];
   supportedFormats: string[];
   faqs: { q: string; a: string }[];
-  reviews: { name: string; role: string; quote: string; initials: string }[];
+  reviews: { name: string; role: string; quote: string; initials: string; date?: string; title?: string; rating?: number }[];
   downloadHref?: string;
   buyHref?: string;
   // SEO
