@@ -13,6 +13,10 @@ import {
   Search,
   Megaphone,
   Bot,
+  FileText,
+  Mail,
+  HardDrive,
+  Inbox,
   type LucideIcon,
 } from "lucide-react";
 
@@ -36,13 +40,48 @@ export type HireCategory = {
 
 export const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
+  { label: "Software", href: "/software", hasMega: "software" },
   { label: "Services", href: "/services", hasMega: "services" },
   { label: "Technologies", href: "/technologies", hasMega: "technologies" },
   { label: "Hire Developer", href: "/hire-developer", hasMega: "hire" },
   { label: "Promotion", href: "/promotion", hasMega: "promotion" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Contact", href: "/contact" },
+];
+
+export const megaSoftware: MegaItem[] = [
+  { icon: FileText, title: "PDF Tools", desc: "Unlock, merge & convert PDFs", href: "/software/pdf-tools" },
+  { icon: Mail, title: "Email Migration", desc: "Convert MBOX emails to PDF", href: "/software/email-migration" },
+  { icon: Inbox, title: "IMAP Backup", desc: "Backup your IMAP emails", href: "/software/imap-backup" },
+  { icon: HardDrive, title: "Gmail Backup", desc: "Backup Gmail to PST, PDF, MBOX & more", href: "/software/gmail-backup" },
+];
+
+export const softwareCategories: HireCategory[] = [
+  {
+    label: "PDF Tools",
+    technologies: [
+      { name: "PDF Unlocker (Unlock, merge & convert PDFs)", href: "/software/pdf-unlocker" },
+      { name: "PDF Bates Numbering (Add Bates stamps for legal & e-discovery)", href: "/software/pdf-bates-numbering" },
+    ],
+  },
+  {
+    label: "Email Migration",
+    technologies: [
+      { name: "MBox to PDF (Convert MBOX emails to PDF)", href: "/software/mbox-to-pdf" },
+    ],
+  },
+  {
+    label: "IMAP Backup",
+    technologies: [
+      { name: "IMAP Backup (Backup your IMAP emails)", href: "/software/imap-backup-tool" },
+    ],
+  },
+  {
+    label: "Gmail Backup",
+    technologies: [
+      { name: "Gmail Backup Tool (Backup Gmail to PST, PDF, MBOX & more)", href: "/software/gmail-backup-tool" },
+    ],
+  },
 ];
 
 export const megaPromotion: MegaItem[] = [
