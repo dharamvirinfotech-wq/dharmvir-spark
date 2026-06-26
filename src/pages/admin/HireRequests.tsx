@@ -132,7 +132,7 @@ const HireRequests = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((s) => !s)} />
+      <Sidebar open={sidebarOpen} onToggle={() => setSidebarOpen((s) => !s)} />
 
       <main className="flex-1 p-6 lg:p-8 overflow-x-hidden">
         <header className="mb-6">
