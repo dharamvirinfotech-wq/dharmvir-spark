@@ -1,43 +1,59 @@
-import PromotionServiceTemplate from "@/components/PromotionServiceTemplate";
-import Seo from "@/components/Seo";
-import { Hash, Scale, Layers, Settings, FileSignature, FolderOpen } from "lucide-react";
+import SoftwareProductTemplate, { type SoftwareProductData } from "@/components/SoftwareProductTemplate";
+import { Hash, Scale, Layers, Settings, FileSignature, FolderOpen, Calendar, ShieldCheck, FileText, Stamp } from "lucide-react";
 
-const PdfBatesNumbering = () => (
-  <>
-    <Seo
-      title="PDF Bates Numbering Software — Legal & E-Discovery Stamps | Dharam Vir Infotech"
-      description="Add Bates stamps to PDFs for legal, litigation and e-discovery workflows. Custom prefix, batch numbering, watermarks and audit-ready file index."
-      path="/software/pdf-bates-numbering"
-      image="/og/pdf-bates.jpg"
-    />
-    <PromotionServiceTemplate
-      title="PDF Bates Numbering"
-      subtitle="Add Bates stamps to PDFs for legal, e-discovery and document review workflows."
-      breadcrumb="PDF Bates Numbering"
-      features={[
-        { icon: Hash, title: "Custom Bates Stamps", desc: "Set prefix, suffix, starting number, padding and step value." },
-        { icon: Scale, title: "Legal-Grade Output", desc: "Court-ready stamps that meet e-discovery and litigation standards." },
-        { icon: Layers, title: "Batch Stamping", desc: "Apply continuous numbering across thousands of PDFs at once." },
-        { icon: Settings, title: "Position Control", desc: "Place stamps on any corner with custom font, size and color." },
-        { icon: FileSignature, title: "Add Watermarks", desc: "Combine Bates numbering with confidential watermarks." },
-        { icon: FolderOpen, title: "Folder Support", desc: "Process entire case folders while preserving structure." },
-      ]}
-      benefits={[
-        "Trusted by law firms, paralegals and e-discovery teams",
-        "Preserves original PDF metadata and bookmarks",
-        "Generates a CSV index of stamped files for case management",
-        "Works on encrypted and digitally signed PDFs",
-        "Undo / reset stamps anytime without altering originals",
-        "Compliant with FRCP and US court e-filing requirements",
-      ]}
-      process={[
-        { step: "1", title: "Load Cases", desc: "Add PDF case files or full folders to the queue." },
-        { step: "2", title: "Configure", desc: "Set prefix, start number, font and stamp position." },
-        { step: "3", title: "Preview", desc: "Live-preview the stamp before applying." },
-        { step: "4", title: "Stamp & Export", desc: "Apply stamps and export with audit-ready file index." },
-      ]}
-    />
-  </>
-);
+const data: SoftwareProductData = {
+  brand: "Dharam Vir Infotech",
+  productName: "PDF Bates Numbering Tool",
+  tagline: "Add Bates Stamps to PDF Pages for Legal & E-Discovery Workflows",
+  description:
+    "Add sequential Bates numbers, prefixes, suffixes, and date stamps to PDF pages — the industry standard for indexing legal documents, e-discovery, and case management. Process thousands of PDFs in a single batch with customizable fonts, colors, positioning, and page-range control.",
+  version: "v4.2.1",
+  rating: 4.8,
+  reviewCount: "2,400+",
+  highlights: ["Custom Prefix & Suffix", "Configurable Number Length", "Batch PDF Processing", "Flexible Positioning"],
+  ProductIcon: Stamp,
+  features: [
+    { icon: Hash, title: "Custom Prefix & Suffix", desc: "Add case numbers, party names, or any custom text before and after the Bates number." },
+    { icon: Layers, title: "Configurable Number Length", desc: "Pad numbers with leading zeros (e.g. ABC000001) and set start/end values per batch." },
+    { icon: FolderOpen, title: "Batch PDF Processing", desc: "Stamp hundreds or thousands of PDFs in one go while keeping numbering continuous across files." },
+    { icon: Settings, title: "Flexible Positioning", desc: "Place stamps in any of 9 positions — header, footer, corners, or center — with custom margins." },
+    { icon: FileSignature, title: "Font, Size & Color Control", desc: "Pick font family, size, color, and opacity to match firm or court formatting requirements." },
+    { icon: FileText, title: "Page Range Selection", desc: "Apply Bates numbering to all pages, specific ranges, odd/even, or skip cover pages." },
+    { icon: Calendar, title: "Date & Time Stamps", desc: "Optionally include the production date alongside the Bates number for compliance." },
+    { icon: ShieldCheck, title: "Encrypted & Signed PDF Support", desc: "Works with password-protected PDFs and preserves digital signatures where possible." },
+    { icon: Scale, title: "Bates Log Report", desc: "Generates a CSV log mapping each file and page to its Bates range for production indexes." },
+  ],
+  steps: [
+    { title: "Add PDF Files", desc: "Drag and drop PDFs or import an entire folder — keep the order or sort by name/date." },
+    { title: "Configure Bates Format", desc: "Set the prefix, starting number, padding, position, font, and page range for the stamp." },
+    { title: "Stamp & Export", desc: "Click Start — Bates-numbered PDFs are written to your output folder along with a production log." },
+  ],
+  requirements: [
+    "Windows 11, 10, 8.1, 8, 7 (32-bit & 64-bit)",
+    "1 GHz processor or faster",
+    "512 MB RAM (1 GB recommended)",
+    "80 MB free disk space for installation",
+    "Microsoft .NET Framework 4.5 or above",
+  ],
+  supportedFormats: ["PDF", "PDF/A"],
+  faqs: [
+    { q: "What is Bates numbering used for?", a: "Bates numbering uniquely identifies and labels every page in a set of documents — the standard practice for legal discovery, litigation production, and case management." },
+    { q: "Can numbering continue across multiple PDFs?", a: "Yes. Add all PDFs to a single batch and the tool maintains continuous numbering across files." },
+    { q: "Can I remove or re-stamp Bates numbers later?", a: "Original files stay untouched. You can re-run the tool with a different prefix or range at any time." },
+    { q: "Does it support encrypted PDFs?", a: "Yes, with the correct password. Digital signatures are preserved where possible." },
+    { q: "Is the output court-admissible?", a: "Output meets standard e-discovery and FRCP production formats used by courts and law firms." },
+  ],
+  reviews: [
+    { name: "Sarah Mitchell", role: "IT Administrator", initials: "SM", quote: "Saved us countless hours on a major migration project. The batch mode just works — exactly what we needed." },
+    { name: "David Chen", role: "Legal Consultant", initials: "DC", quote: "Reliable, fast, and the support team responds quickly. Worth every dollar for our firm's daily workflow." },
+    { name: "Priya Sharma", role: "Paralegal", initials: "PS", quote: "Easy to install and very intuitive. I had everything stamped in under an hour with zero issues." },
+    { name: "Marcus Johnson", role: "E-Discovery Lead", initials: "MJ", quote: "Best tool I've used in this category. The interface is clean and there are no annoying upsells." },
+  ],
+  seoTitle: "PDF Bates Numbering Software — Legal & E-Discovery Stamps | Dharam Vir Infotech",
+  seoDescription: "Add Bates stamps to PDFs for legal, litigation and e-discovery workflows. Custom prefix, batch numbering, watermarks and audit-ready file index.",
+  path: "/software/pdf-bates-numbering",
+  ogImage: "/og/pdf-bates.jpg",
+};
 
+const PdfBatesNumbering = () => <SoftwareProductTemplate data={data} />;
 export default PdfBatesNumbering;
