@@ -51,10 +51,63 @@ const SoftwareProductTemplate = ({ data }: { data: SoftwareProductData }) => {
     seoTitle, seoDescription, path, ogImage,
   } = data;
 
+  const SITE = "https://dharmvir-spark.lovable.app";
+  const productUrl = `${SITE}${path}`;
+  const productImage = ogImage ? `${SITE}${ogImage}` : undefined;
+  const reviewCountNumber = parseInt(String(reviewCount).replace(/[^0-9]/g, ""), 10) || reviews.length || 1;
+
+  const productLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: productName,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Windows",
+    description,
+    softwareVersion: version,
+    url: productUrl,
+    ...(productImage && { image: productImage }),
+    brand: { "@type": "Brand", name: brand },
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      url: productUrl,
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: rating,
+      reviewCount: reviewCountNumber,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    review: reviews.map((r) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.name },
+      reviewBody: r.quote,
+      reviewRating: { "@type": "Rating", ratingValue: 5, bestRating: 5 },
+    })),
+  };
+
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Seo title={seoTitle} description={seoDescription} path={path} image={ogImage} />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(productLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqLd)}</script>
+      </Helmet>
       <Navbar />
+
 
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-[#0a1530] text-primary-foreground">
