@@ -1,8 +1,16 @@
 import PromotionServiceTemplate from "@/components/PromotionServiceTemplate";
+import Seo from "@/components/Seo";
 import { Unlock, FileText, Shuffle, Shield, Zap, Download } from "lucide-react";
 
 const PdfUnlocker = () => (
-  <PromotionServiceTemplate
+  <>
+    <Seo
+      title="PDF Unlocker — Remove PDF Restrictions, Merge & Convert | Dharam Vir Infotech"
+      description="Unlock password-protected PDFs and remove print, copy and edit restrictions. Batch process, merge, split and convert PDFs offline on Windows."
+      path="/software/pdf-unlocker"
+      image="/og/pdf-unlocker.jpg"
+    />
+    <PromotionServiceTemplate
     title="PDF Unlocker"
     subtitle="Unlock, merge & convert protected PDF files in seconds — no password? No problem."
     breadcrumb="PDF Unlocker"
@@ -28,7 +36,8 @@ const PdfUnlocker = () => (
       { step: "3", title: "Unlock", desc: "Click Unlock — restrictions are removed instantly." },
       { step: "4", title: "Save", desc: "Save the unrestricted PDFs to any location." },
     ]}
-  />
+    />
+  </>
 );
 
 export default PdfUnlocker;

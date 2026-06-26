@@ -3,11 +3,18 @@ import Navbar from "@/components/Navbar";
 import PageBanner from "@/components/PageBanner";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import Seo from "@/components/Seo";
 import { ArrowRight } from "lucide-react";
 import { softwareCategories, megaSoftware } from "@/data/navigation";
 
 const Software = () => (
   <div className="min-h-screen bg-background">
+    <Seo
+      title="Software Products — PDF Tools, Email Migration & Backup Utilities | Dharam Vir Infotech"
+      description="Powerful Windows utilities for PDF unlocking, Bates numbering, MBOX to PDF conversion, IMAP and Gmail backups. Trusted by legal, IT and compliance teams."
+      path="/software"
+      image="/og/software.jpg"
+    />
     <Navbar />
     <PageBanner
       title="Software Products"
