@@ -18,6 +18,7 @@ import {
   megaTechnologies,
   hireCategories,
   promotionCategories,
+  softwareCategories,
 } from "@/data/navigation";
 import { useAuth } from "@/context/AuthContext";
 
@@ -28,6 +29,7 @@ const Navbar = () => {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [activeHireCategory, setActiveHireCategory] = useState(0);
   const [activePromoCategory, setActivePromoCategory] = useState(0);
+  const [activeSoftwareCategory, setActiveSoftwareCategory] = useState(0);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { user, logout } = useAuth();
@@ -247,6 +249,8 @@ const Navbar = () => {
                       ? renderCategoryMega(hireCategories, activeHireCategory, setActiveHireCategory, "/hire-developer", "Hire Developers")
                       : link.hasMega === "promotion"
                       ? renderCategoryMega(promotionCategories, activePromoCategory, setActivePromoCategory, "/promotion", "Promotion Services")
+                      : link.hasMega === "software"
+                      ? renderCategoryMega(softwareCategories, activeSoftwareCategory, setActiveSoftwareCategory, "/software", "Software Products")
                       : renderGridMega(link.hasMega!)}
                   </div>
                 </div>
@@ -350,8 +354,8 @@ const Navbar = () => {
                   </button>
                   {mobileExpanded === link.hasMega && (
                     <div className="pl-4 py-2 space-y-1 border-b border-border">
-                      {(link.hasMega === "hire" || link.hasMega === "promotion")
-                        ? (link.hasMega === "hire" ? hireCategories : promotionCategories).map((cat) => (
+                      {(link.hasMega === "hire" || link.hasMega === "promotion" || link.hasMega === "software")
+                        ? (link.hasMega === "hire" ? hireCategories : link.hasMega === "promotion" ? promotionCategories : softwareCategories).map((cat) => (
                             <div key={cat.label} className="mb-3">
                               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5 px-2">
                                 {cat.label}
