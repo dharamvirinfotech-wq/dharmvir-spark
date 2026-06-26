@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  Search, Eye, MapPin, Loader2, Briefcase, CheckCircle2, XCircle, Clock, Mail, Phone, Building2, Calendar,
+  Search, Eye, MapPin, Loader2, Briefcase, CheckCircle2, XCircle, Clock, Mail, Phone, Building2, Calendar, Download,
 } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -44,6 +44,44 @@ const fmtDate = (d: string) => new Date(d).toLocaleString();
 
 const mapsLink = (lat: number | null, lng: number | null) =>
   lat != null && lng != null ? `https://www.google.com/maps?q=${lat},${lng}` : null;
+
+const escapeCsv = (val: unknown) => {
+  const s = String(val ?? "").replace(/"/g, '""');
+  if (s.includes(",") || s.includes("\n") || s.includes('"')) return `"${s}"`;
+  return s;
+};
+
+const exportToCSV = (rows: HireRequest[], filename = "hire-requests.csv") => {
+  const headers = [
+    "ID", "User ID", "Developer Slug", "Developer Name", "Developer Role",
+    "Name", "Email", "Phone", "Company",
+    "Engagement Type", "Budget", "Timeline", "Project Description",
+    "Latitude", "Longitude", "Location Accuracy", "Location Address",
+    "Status", "Admin Notes", "Created At", "Updated At",
+  ];
+  const lines = [
+    headers.join(","),
+    ...rows.map((r) =>
+      [
+        r.id, r.user_id, r.developer_slug, r.developer_name, r.developer_role,
+        r.name, r.email, r.phone, r.company,
+        r.engagement_type, r.budget, r.timeline, r.project_description,
+        r.latitude, r.longitude, r.location_accuracy, r.location_address,
+        r.status, r.admin_notes, r.created_at, r.updated_at,
+      ].map(escapeCsv).join(",")
+    ),
+  ];
+  const csv = lines.join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
 
 const HireRequests = () => {
   const { toast } = useToast();
@@ -197,6 +235,14 @@ const HireRequests = () => {
               </SelectContent>
             </Select>
             <Button onClick={fetchData} variant="secondary">Apply</Button>
+            <Button
+              variant="outline"
+              onClick={() => exportToCSV(requests, "hire-requests.csv")}
+              disabled={requests.length === 0}
+              className="gap-2"
+            >
+              <Download className="h-4 w-4" /> Export CSV
+            </Button>
           </CardContent>
         </Card>
 
