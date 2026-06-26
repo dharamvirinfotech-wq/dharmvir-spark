@@ -1,6 +1,11 @@
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { pool } = require('../db/pool');
+const {
+  sendMail,
+  renderUserConfirmation,
+  renderInternalNotification,
+} = require('../utils/mailer');
 
 // Public: submit a "Hire Developer" request. Also auto-creates a user account
 // if one doesn't already exist for the provided email.
@@ -60,6 +65,33 @@ exports.create = async (req, res, next) => {
         ip, ua,
       ]
     );
+
+    // Build a summary record for email rendering
+    const summary = {
+      id: result.insertId,
+      developer_slug, developer_name, developer_role,
+      name, email, phone, company,
+      engagement_type, budget, timeline, project_description,
+      latitude, longitude, location_address,
+    };
+
+    // Fire-and-forget email notifications (don't block the API response).
+    // Errors are logged inside sendMail.
+    (async () => {
+      try {
+        const userMail = renderUserConfirmation(summary);
+        await sendMail({ to: email, ...userMail });
+
+        const internalList = (process.env.HIRE_NOTIFY_EMAILS || '')
+          .split(',').map((s) => s.trim()).filter(Boolean);
+        if (internalList.length) {
+          const teamMail = renderInternalNotification(summary);
+          await sendMail({ to: internalList, ...teamMail });
+        }
+      } catch (e) {
+        console.error('[hire] notification email failed:', e.message);
+      }
+    })();
 
     res.status(201).json({
       id: result.insertId,

@@ -144,7 +144,7 @@ export type HireRequest = {
   longitude: number | null;
   location_accuracy: number | null;
   location_address: string | null;
-  status: "new" | "contacted" | "scheduled" | "closed";
+  status: "new" | "contacted" | "scheduled" | "approved" | "rejected" | "completed" | "closed";
   admin_notes: string | null;
   created_at: string;
   updated_at: string;

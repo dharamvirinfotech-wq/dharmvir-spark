@@ -90,7 +90,7 @@ router.patch(
   requireAuth,
   requireRole('admin', 'editor'),
   [
-    body('status').optional().isIn(['new', 'contacted', 'scheduled', 'closed']),
+    body('status').optional().isIn(['new', 'contacted', 'scheduled', 'approved', 'rejected', 'completed', 'closed']),
     body('admin_notes').optional({ nullable: true }).isString().isLength({ max: 5000 }),
   ],
   validate,
