@@ -126,4 +126,61 @@ export const expertsApi = {
     api.delete<{ message: string }>(`/experts/${id}`).then((r) => r.data),
 };
 
+export type HireRequest = {
+  id: number;
+  user_id: number | null;
+  developer_slug: string;
+  developer_name: string;
+  developer_role: string | null;
+  name: string;
+  email: string;
+  phone: string | null;
+  company: string | null;
+  engagement_type: "full-time" | "part-time" | "contract" | "project-based";
+  budget: string | null;
+  timeline: string | null;
+  project_description: string;
+  latitude: number | null;
+  longitude: number | null;
+  location_accuracy: number | null;
+  location_address: string | null;
+  status: "new" | "contacted" | "scheduled" | "closed";
+  admin_notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export const hireApi = {
+  submit: (payload: {
+    developer_slug: string;
+    developer_name: string;
+    developer_role?: string;
+    name: string;
+    email: string;
+    phone?: string;
+    company?: string;
+    engagement_type?: "full-time" | "part-time" | "contract" | "project-based";
+    budget?: string;
+    timeline?: string;
+    project_description: string;
+    latitude?: number | null;
+    longitude?: number | null;
+    location_accuracy?: number | null;
+    location_address?: string | null;
+  }) =>
+    api
+      .post<{ id: number; user_id: number; user_created: boolean; message: string }>("/hire", payload)
+      .then((r) => r.data),
+
+  list: (params?: { status?: string; developer_slug?: string; search?: string }) =>
+    api.get<{ requests: HireRequest[] }>("/hire", { params }).then((r) => r.data),
+
+  get: (id: number) => api.get<{ request: HireRequest }>(`/hire/${id}`).then((r) => r.data),
+
+  update: (id: number, payload: { status?: string; admin_notes?: string }) =>
+    api.patch<{ request: HireRequest }>(`/hire/${id}`, payload).then((r) => r.data),
+
+  remove: (id: number) => api.delete<{ message: string }>(`/hire/${id}`).then((r) => r.data),
+};
+
 export default api;
