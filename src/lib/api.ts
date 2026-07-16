@@ -184,3 +184,57 @@ export const hireApi = {
 };
 
 export default api;
+<<<<<<< HEAD
+=======
+
+export type Developer = {
+  id: number;
+  slug: string;
+  name: string;
+  role: string;
+  experience: string;
+  hourlyRate: string | null;
+  rating: number;
+  location: string | null;
+  avatar: string | null;
+  bio: string | null;
+  availability: string | null;
+  projectsCompleted: number;
+  education: string | null;
+  skills: string[];
+  languages: string[];
+  certifications: string[];
+  categories: string[];
+  status: "active" | "inactive";
+  featured: boolean;
+};
+
+export type DeveloperInput = Partial<Omit<Developer, "id" | "rating" | "projectsCompleted">> & {
+  name: string;
+  role: string;
+  experience: string;
+  rating?: number;
+  projectsCompleted?: number;
+};
+
+export const developersApi = {
+  list: (params?: { status?: string; search?: string; category?: string; featured?: boolean }) =>
+    api
+      .get<{ developers: Developer[] }>("/developers", {
+        params: { ...params, featured: params?.featured ? "true" : undefined },
+      })
+      .then((r) => r.data),
+
+  get: (key: string | number) =>
+    api.get<{ developer: Developer }>(`/developers/${key}`).then((r) => r.data),
+
+  create: (payload: DeveloperInput) =>
+    api.post<{ developer: Developer }>("/developers", payload).then((r) => r.data),
+
+  update: (id: number, payload: Partial<DeveloperInput>) =>
+    api.patch<{ developer: Developer }>(`/developers/${id}`, payload).then((r) => r.data),
+
+  remove: (id: number) =>
+    api.delete<{ message: string }>(`/developers/${id}`).then((r) => r.data),
+};
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6

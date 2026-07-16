@@ -16,6 +16,10 @@ const userRoutes = require('./routes/user.routes');
 const contactRoutes = require('./routes/contact.routes');
 const expertRoutes = require('./routes/expert.routes');
 const hireRoutes = require('./routes/hire.routes');
+<<<<<<< HEAD
+=======
+const developerRoutes = require('./routes/developer.routes');
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
 const { notFound, errorHandler } = require('./middleware/error');
 const { testConnection } = require('./db/pool');
 const { configurePassport } = require('./auth/passport');
@@ -23,12 +27,16 @@ const { configurePassport } = require('./auth/passport');
 const app = express();
 
 app.use(helmet());
+<<<<<<< HEAD
 app.use(cors({
     origin: process.env.CORS_ORIGIN || '*',
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
+=======
+app.use(cors({ origin: process.env.CORS_ORIGIN || '*', credentials: true }));
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan('dev'));
 
@@ -67,6 +75,10 @@ app.use('/api/users', userRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/experts', expertRoutes);
 app.use('/api/hire', hireRoutes);
+<<<<<<< HEAD
+=======
+app.use('/api/developers', developerRoutes);
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
 
 app.use(notFound);
 app.use(errorHandler);

@@ -168,6 +168,73 @@ async function migrate() {
     `);
   } catch (e) { /* ignore if already up to date */ }
 
+<<<<<<< HEAD
+=======
+  // Developer profiles (managed from admin panel; consumed by public hire pages)
+  await root.query(`
+    CREATE TABLE IF NOT EXISTS developers (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      slug VARCHAR(150) NOT NULL UNIQUE,
+      name VARCHAR(150) NOT NULL,
+      role VARCHAR(150) NOT NULL,
+      experience VARCHAR(50) NOT NULL,
+      hourly_rate VARCHAR(50) DEFAULT NULL,
+      rating DECIMAL(3,1) NOT NULL DEFAULT 4.5,
+      location VARCHAR(150) DEFAULT NULL,
+      avatar VARCHAR(10) DEFAULT NULL,
+      bio TEXT DEFAULT NULL,
+      availability VARCHAR(100) DEFAULT 'Full-time',
+      projects_completed INT NOT NULL DEFAULT 0,
+      education VARCHAR(255) DEFAULT NULL,
+      skills JSON DEFAULT NULL,
+      languages JSON DEFAULT NULL,
+      certifications JSON DEFAULT NULL,
+      categories JSON DEFAULT NULL,
+      status ENUM('active','inactive') NOT NULL DEFAULT 'active',
+      featured TINYINT(1) NOT NULL DEFAULT 0,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      INDEX idx_dev_status (status),
+      INDEX idx_dev_slug (slug)
+    ) ENGINE=InnoDB;
+  `);
+
+  // Seed a few developers if empty
+  const [[{ c: devCount }]] = await root.query('SELECT COUNT(*) AS c FROM developers');
+  if (devCount === 0) {
+    const seed = [
+      ['rahul-sharma', 'Rahul Sharma', 'Senior Full Stack Developer', '8+ Years', '$25-35', 4.9, 'Bangalore, India', 'RS',
+       'Passionate senior developer with 8+ years building scalable applications.', 'Full-time / Part-time', 54,
+       'B.Tech Computer Science, IIT Delhi',
+       JSON.stringify(['Team Lead','Architecture','Mentoring','Code Review','System Design']),
+       JSON.stringify(['English (Fluent)','Hindi (Native)']),
+       JSON.stringify(['AWS Certified Solutions Architect','Google Cloud Professional']),
+       JSON.stringify(['fullstack','backend']), 1],
+      ['priya-patel', 'Priya Patel', 'Frontend Developer', '6+ Years', '$20-30', 4.8, 'Pune, India', 'PP',
+       'Detail-oriented developer specializing in beautiful, performant user interfaces.', 'Full-time', 42,
+       'M.Tech Software Engineering, BITS Pilani',
+       JSON.stringify(['UI/UX','Performance','Testing','Responsive Design','Accessibility']),
+       JSON.stringify(['English (Fluent)','Hindi (Native)','Gujarati']),
+       JSON.stringify(['Meta Front-End Developer Certificate']),
+       JSON.stringify(['frontend']), 1],
+      ['amit-kumar', 'Amit Kumar', 'Backend Developer', '5+ Years', '$18-25', 4.7, 'Hyderabad, India', 'AK',
+       'Backend-focused developer building robust APIs and optimizing databases.', 'Full-time / Contract', 38,
+       'B.Tech IT, IIIT Hyderabad',
+       JSON.stringify(['API Design','Database','Security','Microservices','Docker']),
+       JSON.stringify(['English (Fluent)','Hindi (Native)','Telugu']),
+       JSON.stringify(['Certified Kubernetes Administrator']),
+       JSON.stringify(['backend']), 0],
+    ];
+    for (const row of seed) {
+      await root.query(
+        `INSERT INTO developers (slug,name,role,experience,hourly_rate,rating,location,avatar,bio,availability,projects_completed,education,skills,languages,certifications,categories,featured)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        row
+      );
+    }
+  }
+
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
   console.log(`Migration complete on database "${DB_NAME}"`);
   await root.end();
 }

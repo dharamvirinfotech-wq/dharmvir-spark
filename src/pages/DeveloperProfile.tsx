@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import PageBanner from "@/components/PageBanner";
 import Footer from "@/components/Footer";
+<<<<<<< HEAD
 import { Star, MapPin, Briefcase, DollarSign, CheckCircle, Clock, Globe, Award, Send } from "lucide-react";
 import { toast } from "sonner";
 import { hireApi } from "@/lib/api";
@@ -76,13 +77,37 @@ const defaultDevelopers: Record<string, DeveloperData> = {
     education: "M.Tech Computer Science, IIT Bombay"
   },
 };
+=======
+import { Star, MapPin, Briefcase, DollarSign, CheckCircle, Clock, Award, Send, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { hireApi, developersApi, type Developer } from "@/lib/api";
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
 
 const DeveloperProfile = () => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
+<<<<<<< HEAD
   const role = searchParams.get("role") || "Developer";
 
   const dev = slug ? defaultDevelopers[slug] : null;
+=======
+  const roleOverride = searchParams.get("role");
+
+  const [dev, setDev] = useState<Developer | null>(null);
+  const [loadingDev, setLoadingDev] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (!slug) return;
+    setLoadingDev(true);
+    setNotFound(false);
+    developersApi
+      .get(slug)
+      .then((r) => setDev(r.developer))
+      .catch(() => setNotFound(true))
+      .finally(() => setLoadingDev(false));
+  }, [slug]);
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
 
   const [formData, setFormData] = useState({
     name: "",
@@ -98,7 +123,10 @@ const DeveloperProfile = () => {
   const [geo, setGeo] = useState<{ latitude: number; longitude: number; accuracy: number; address?: string | null } | null>(null);
   const [geoStatus, setGeoStatus] = useState<"idle" | "loading" | "ready" | "denied" | "unsupported">("idle");
 
+<<<<<<< HEAD
   // Request live location on mount (non-blocking)
+=======
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
   useEffect(() => {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
       setGeoStatus("unsupported");
@@ -118,7 +146,11 @@ const DeveloperProfile = () => {
             const j = await r.json();
             address = (j?.display_name as string) || null;
           }
+<<<<<<< HEAD
         } catch { /* ignore reverse-geocode errors */ }
+=======
+        } catch { /* ignore */ }
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
         setGeo({ latitude, longitude, accuracy, address });
         setGeoStatus("ready");
       },
@@ -127,7 +159,23 @@ const DeveloperProfile = () => {
     );
   }, []);
 
+<<<<<<< HEAD
   if (!dev) {
+=======
+  if (loadingDev) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container mx-auto px-4 py-32 flex items-center justify-center">
+          <Loader2 className="animate-spin text-accent" size={32} />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (notFound || !dev) {
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -143,7 +191,12 @@ const DeveloperProfile = () => {
     );
   }
 
+<<<<<<< HEAD
   const devWithRole = { ...dev, role };
+=======
+  const devWithRole = { ...dev, role: roleOverride || dev.role };
+
+>>>>>>> cbfd5f7c5c418cae6724877fa2a07753603619e6
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
