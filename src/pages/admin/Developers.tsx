@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Mail, Bell, Plus, Search, Edit, Trash2, MoreVertical, Code2, Star, MapPin, DollarSign
+  Bell, Plus, Search, Edit, Trash2, MoreVertical, Star, MapPin, DollarSign, Loader2, Sparkles
 } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,72 +18,22 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-
-interface Developer {
-  id: number;
-  slug: string;
-  name: string;
-  role: string;
-  experience: string;
-  hourlyRate: string;
-  rating: number;
-  location: string;
-  avatar: string;
-  skills: string[];
-  bio: string;
-  languages: string[];
-  availability: string;
-  projectsCompleted: number;
-  certifications: string[];
-  education: string;
-  status: "Active" | "Inactive";
-}
-
-const initialDevelopers: Developer[] = [
-  {
-    id: 1, slug: "rahul-sharma", name: "Rahul Sharma", role: "Senior Full Stack Developer",
-    experience: "8+ Years", hourlyRate: "$25-35", rating: 4.9, location: "Bangalore, India", avatar: "RS",
-    skills: ["Team Lead", "Architecture", "Mentoring", "Code Review", "System Design"],
-    bio: "Passionate senior developer with 8+ years of experience building scalable applications.",
-    languages: ["English (Fluent)", "Hindi (Native)"], availability: "Full-time / Part-time",
-    projectsCompleted: 54, certifications: ["AWS Certified Solutions Architect", "Google Cloud Professional"],
-    education: "B.Tech Computer Science, IIT Delhi", status: "Active",
-  },
-  {
-    id: 2, slug: "priya-patel", name: "Priya Patel", role: "Frontend Developer",
-    experience: "6+ Years", hourlyRate: "$20-30", rating: 4.8, location: "Pune, India", avatar: "PP",
-    skills: ["UI/UX", "Performance", "Testing", "Responsive Design", "Accessibility"],
-    bio: "Detail-oriented developer specializing in beautiful, performant user interfaces.",
-    languages: ["English (Fluent)", "Hindi (Native)", "Gujarati"], availability: "Full-time",
-    projectsCompleted: 42, certifications: ["Meta Front-End Developer Certificate"],
-    education: "M.Tech Software Engineering, BITS Pilani", status: "Active",
-  },
-  {
-    id: 3, slug: "amit-kumar", name: "Amit Kumar", role: "Backend Developer",
-    experience: "5+ Years", hourlyRate: "$18-25", rating: 4.7, location: "Hyderabad, India", avatar: "AK",
-    skills: ["API Design", "Database", "Security", "Microservices", "Docker"],
-    bio: "Backend-focused developer building robust APIs and optimizing databases.",
-    languages: ["English (Fluent)", "Hindi (Native)", "Telugu"], availability: "Full-time / Contract",
-    projectsCompleted: 38, certifications: ["Certified Kubernetes Administrator"],
-    education: "B.Tech IT, IIIT Hyderabad", status: "Active",
-  },
-];
+import { developersApi, type Developer } from "@/lib/api";
 
 const emptyForm = {
   slug: "", name: "", role: "Developer", experience: "", hourlyRate: "", rating: 4.5,
   location: "", avatar: "", skills: "", bio: "", languages: "", availability: "Full-time",
-  projectsCompleted: 0, certifications: "", education: "", status: "Active" as "Active" | "Inactive",
+  projectsCompleted: 0, certifications: "", education: "", categories: "",
+  status: "active" as "active" | "inactive", featured: false,
 };
 
-const slugify = (s: string) =>
-  s.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
-
-const initialsOf = (s: string) =>
-  s.trim().split(/\s+/).map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+const toList = (s: string) => s.split(",").map((x) => x.trim()).filter(Boolean);
 
 const AdminDevelopers = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [developers, setDevelopers] = useState<Developer[]>(initialDevelopers);
+  const [developers, setDevelopers] = useState<Developer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [formData, setFormData] = useState(emptyForm);
@@ -91,11 +41,30 @@ const AdminDevelopers = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
 
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await developersApi.list();
+      setDevelopers(res.developers);
+    } catch (e) {
+      toast({
+        title: "Failed to load developers",
+        description: e instanceof Error ? e.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { void load(); }, []);
+
   const filtered = developers.filter((d) => {
+    const q = searchQuery.toLowerCase();
     const matchSearch =
-      d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      d.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      d.skills.join(" ").toLowerCase().includes(searchQuery.toLowerCase());
+      d.name.toLowerCase().includes(q) ||
+      d.role.toLowerCase().includes(q) ||
+      d.skills.join(" ").toLowerCase().includes(q);
     const matchStatus = filterStatus === "all" || d.status === filterStatus;
     return matchSearch && matchStatus;
   });
@@ -110,91 +79,101 @@ const AdminDevelopers = () => {
     setEditing(d);
     setFormData({
       slug: d.slug, name: d.name, role: d.role, experience: d.experience,
-      hourlyRate: d.hourlyRate, rating: d.rating, location: d.location, avatar: d.avatar,
-      skills: d.skills.join(", "), bio: d.bio, languages: d.languages.join(", "),
-      availability: d.availability, projectsCompleted: d.projectsCompleted,
-      certifications: d.certifications.join(", "), education: d.education, status: d.status,
+      hourlyRate: d.hourlyRate || "", rating: d.rating, location: d.location || "",
+      avatar: d.avatar || "", skills: d.skills.join(", "), bio: d.bio || "",
+      languages: d.languages.join(", "), availability: d.availability || "Full-time",
+      projectsCompleted: d.projectsCompleted,
+      certifications: d.certifications.join(", "),
+      education: d.education || "", categories: d.categories.join(", "),
+      status: d.status, featured: d.featured,
     });
     setDialogOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    setDevelopers(developers.filter((d) => d.id !== id));
-    toast({ title: "Developer deleted", description: "Profile has been removed." });
+  const handleDelete = async (id: number) => {
+    if (!confirm("Delete this developer profile?")) return;
+    try {
+      await developersApi.remove(id);
+      setDevelopers((prev) => prev.filter((d) => d.id !== id));
+      toast({ title: "Developer deleted", description: "Profile has been removed." });
+    } catch (e) {
+      toast({
+        title: "Delete failed",
+        description: e instanceof Error ? e.message : "Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const toList = (s: string) => s.split(",").map((x) => x.trim()).filter(Boolean);
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.name || !formData.role || !formData.experience) {
-      toast({ title: "Error", description: "Name, role and experience are required.", variant: "destructive" });
+      toast({ title: "Missing fields", description: "Name, role and experience are required.", variant: "destructive" });
       return;
     }
-    const slug = formData.slug || slugify(formData.name);
-    const avatar = formData.avatar || initialsOf(formData.name);
-
-    if (editing) {
-      setDevelopers(developers.map((d) => d.id === editing.id ? {
-        ...d, slug, avatar,
-        name: formData.name, role: formData.role, experience: formData.experience,
-        hourlyRate: formData.hourlyRate, rating: Number(formData.rating) || 0,
-        location: formData.location,
-        skills: toList(formData.skills), bio: formData.bio,
-        languages: toList(formData.languages), availability: formData.availability,
-        projectsCompleted: Number(formData.projectsCompleted) || 0,
-        certifications: toList(formData.certifications),
-        education: formData.education, status: formData.status,
-      } : d));
-      toast({ title: "Developer updated", description: `${formData.name} has been updated.` });
-    } else {
-      const newDev: Developer = {
-        id: Date.now(), slug, avatar,
-        name: formData.name, role: formData.role, experience: formData.experience,
-        hourlyRate: formData.hourlyRate, rating: Number(formData.rating) || 0,
-        location: formData.location,
-        skills: toList(formData.skills), bio: formData.bio,
-        languages: toList(formData.languages), availability: formData.availability,
-        projectsCompleted: Number(formData.projectsCompleted) || 0,
-        certifications: toList(formData.certifications),
-        education: formData.education, status: formData.status,
-      };
-      setDevelopers([newDev, ...developers]);
-      toast({ title: "Developer added", description: `${formData.name} has been created.` });
+    setSaving(true);
+    const payload = {
+      slug: formData.slug || undefined,
+      name: formData.name, role: formData.role, experience: formData.experience,
+      hourlyRate: formData.hourlyRate, rating: Number(formData.rating) || 0,
+      location: formData.location, avatar: formData.avatar || undefined,
+      bio: formData.bio, availability: formData.availability,
+      projectsCompleted: Number(formData.projectsCompleted) || 0,
+      education: formData.education,
+      skills: toList(formData.skills),
+      languages: toList(formData.languages),
+      certifications: toList(formData.certifications),
+      categories: toList(formData.categories),
+      status: formData.status, featured: formData.featured,
+    };
+    try {
+      if (editing) {
+        const res = await developersApi.update(editing.id, payload);
+        setDevelopers((prev) => prev.map((d) => (d.id === editing.id ? res.developer : d)));
+        toast({ title: "Developer updated", description: `${res.developer.name} has been updated.` });
+      } else {
+        const res = await developersApi.create(payload);
+        setDevelopers((prev) => [res.developer, ...prev]);
+        toast({ title: "Developer added", description: `${res.developer.name} has been created.` });
+      }
+      setDialogOpen(false);
+    } catch (e) {
+      toast({
+        title: "Save failed",
+        description: e instanceof Error ? e.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
     }
-    setDialogOpen(false);
   };
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      {/* Sidebar */}
-      <Sidebar 
-        open={sidebarOpen} 
-        onToggle={() => setSidebarOpen(!sidebarOpen)} 
-      />
+      <Sidebar open={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-      {/* Main */}
       <main className="flex-1 min-h-screen">
         <header className="bg-background border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-30">
           <div>
             <h1 className="text-xl font-bold text-primary">Hire Developer Profiles</h1>
-            <p className="text-sm text-muted-foreground">Manage developer profiles shown on the Hire Developer pages</p>
+            <p className="text-sm text-muted-foreground">Managed via API — visible on the public Hire Developer pages</p>
           </div>
           <div className="flex items-center gap-4">
-            <button className="relative text-muted-foreground hover:text-foreground"><Bell size={20} /><span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold rounded-full flex items-center justify-center">3</span></button>
+            <button className="relative text-muted-foreground hover:text-foreground">
+              <Bell size={20} />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold rounded-full flex items-center justify-center">3</span>
+            </button>
             <div className="w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">A</div>
           </div>
         </header>
 
         <div className="p-6">
-          {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-5 mb-6">
             <Card className="border-border"><CardContent className="p-5"><p className="text-sm text-muted-foreground">Total Developers</p><p className="text-2xl font-bold text-primary mt-1">{developers.length}</p></CardContent></Card>
-            <Card className="border-border"><CardContent className="p-5"><p className="text-sm text-muted-foreground">Active</p><p className="text-2xl font-bold text-green-600 mt-1">{developers.filter(d => d.status === "Active").length}</p></CardContent></Card>
-            <Card className="border-border"><CardContent className="p-5"><p className="text-sm text-muted-foreground">Avg. Rating</p><p className="text-2xl font-bold text-accent mt-1">{developers.length ? (developers.reduce((s, d) => s + d.rating, 0) / developers.length).toFixed(1) : "0.0"}</p></CardContent></Card>
-            <Card className="border-border"><CardContent className="p-5"><p className="text-sm text-muted-foreground">Total Projects</p><p className="text-2xl font-bold text-primary mt-1">{developers.reduce((s, d) => s + d.projectsCompleted, 0)}</p></CardContent></Card>
+            <Card className="border-border"><CardContent className="p-5"><p className="text-sm text-muted-foreground">Active</p><p className="text-2xl font-bold text-green-600 mt-1">{developers.filter(d => d.status === "active").length}</p></CardContent></Card>
+            <Card className="border-border"><CardContent className="p-5"><p className="text-sm text-muted-foreground">Featured</p><p className="text-2xl font-bold text-accent mt-1">{developers.filter(d => d.featured).length}</p></CardContent></Card>
+            <Card className="border-border"><CardContent className="p-5"><p className="text-sm text-muted-foreground">Avg. Rating</p><p className="text-2xl font-bold text-primary mt-1">{developers.length ? (developers.reduce((s, d) => s + d.rating, 0) / developers.length).toFixed(1) : "0.0"}</p></CardContent></Card>
           </div>
 
-          {/* Toolbar */}
           <Card className="border-border mb-6">
             <CardContent className="p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
               <div className="flex gap-3 flex-1 w-full sm:w-auto">
@@ -206,8 +185,8 @@ const AdminDevelopers = () => {
                   <SelectTrigger className="w-36"><SelectValue placeholder="Status" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Inactive">Inactive</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -215,66 +194,73 @@ const AdminDevelopers = () => {
             </CardContent>
           </Card>
 
-          {/* Table */}
           <Card className="border-border">
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/50">
-                      <th className="text-left py-3 px-4 text-muted-foreground font-medium">Developer</th>
-                      <th className="text-left py-3 px-4 text-muted-foreground font-medium">Role</th>
-                      <th className="text-left py-3 px-4 text-muted-foreground font-medium">Experience</th>
-                      <th className="text-left py-3 px-4 text-muted-foreground font-medium">Rate</th>
-                      <th className="text-left py-3 px-4 text-muted-foreground font-medium">Rating</th>
-                      <th className="text-left py-3 px-4 text-muted-foreground font-medium">Location</th>
-                      <th className="text-left py-3 px-4 text-muted-foreground font-medium">Projects</th>
-                      <th className="text-left py-3 px-4 text-muted-foreground font-medium">Status</th>
-                      <th className="text-right py-3 px-4 text-muted-foreground font-medium">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filtered.map((d) => (
-                      <tr key={d.id} className="border-b border-border last:border-0 hover:bg-muted/30">
-                        <td className="py-3 px-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-full bg-accent/10 text-accent font-bold flex items-center justify-center text-xs">{d.avatar}</div>
-                            <div>
-                              <p className="font-medium text-foreground">{d.name}</p>
-                              <p className="text-xs text-muted-foreground">/{d.slug}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4 text-muted-foreground">{d.role}</td>
-                        <td className="py-3 px-4 text-muted-foreground">{d.experience}</td>
-                        <td className="py-3 px-4 text-muted-foreground inline-flex items-center gap-1"><DollarSign size={12} />{d.hourlyRate}</td>
-                        <td className="py-3 px-4"><span className="inline-flex items-center gap-1 text-xs font-medium"><Star size={12} className="fill-accent text-accent" />{d.rating}</span></td>
-                        <td className="py-3 px-4 text-muted-foreground"><span className="inline-flex items-center gap-1"><MapPin size={12} />{d.location}</span></td>
-                        <td className="py-3 px-4 text-muted-foreground">{d.projectsCompleted}+</td>
-                        <td className="py-3 px-4"><span className={`px-2 py-1 rounded-full text-xs font-medium ${d.status === "Active" ? "bg-green-500/10 text-green-600" : "bg-muted text-muted-foreground"}`}>{d.status}</span></td>
-                        <td className="py-3 px-4 text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical size={16} /></Button></DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleEdit(d)} className="gap-2"><Edit size={14} /> Edit</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleDelete(d.id)} className="gap-2 text-destructive"><Trash2 size={14} /> Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </td>
+              {loading ? (
+                <div className="py-16 text-center text-muted-foreground flex items-center justify-center gap-2">
+                  <Loader2 className="animate-spin" size={16} /> Loading developers…
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/50">
+                        <th className="text-left py-3 px-4 text-muted-foreground font-medium">Developer</th>
+                        <th className="text-left py-3 px-4 text-muted-foreground font-medium">Role</th>
+                        <th className="text-left py-3 px-4 text-muted-foreground font-medium">Experience</th>
+                        <th className="text-left py-3 px-4 text-muted-foreground font-medium">Rate</th>
+                        <th className="text-left py-3 px-4 text-muted-foreground font-medium">Rating</th>
+                        <th className="text-left py-3 px-4 text-muted-foreground font-medium">Location</th>
+                        <th className="text-left py-3 px-4 text-muted-foreground font-medium">Projects</th>
+                        <th className="text-left py-3 px-4 text-muted-foreground font-medium">Status</th>
+                        <th className="text-right py-3 px-4 text-muted-foreground font-medium">Actions</th>
                       </tr>
-                    ))}
-                    {filtered.length === 0 && (
-                      <tr><td colSpan={9} className="py-12 text-center text-muted-foreground">No developers found.</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {filtered.map((d) => (
+                        <tr key={d.id} className="border-b border-border last:border-0 hover:bg-muted/30">
+                          <td className="py-3 px-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-full bg-accent/10 text-accent font-bold flex items-center justify-center text-xs">{d.avatar}</div>
+                              <div>
+                                <p className="font-medium text-foreground flex items-center gap-1.5">
+                                  {d.name}
+                                  {d.featured && <Sparkles size={12} className="text-accent" />}
+                                </p>
+                                <p className="text-xs text-muted-foreground">/{d.slug}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4 text-muted-foreground">{d.role}</td>
+                          <td className="py-3 px-4 text-muted-foreground">{d.experience}</td>
+                          <td className="py-3 px-4 text-muted-foreground inline-flex items-center gap-1"><DollarSign size={12} />{d.hourlyRate}</td>
+                          <td className="py-3 px-4"><span className="inline-flex items-center gap-1 text-xs font-medium"><Star size={12} className="fill-accent text-accent" />{d.rating}</span></td>
+                          <td className="py-3 px-4 text-muted-foreground"><span className="inline-flex items-center gap-1"><MapPin size={12} />{d.location}</span></td>
+                          <td className="py-3 px-4 text-muted-foreground">{d.projectsCompleted}+</td>
+                          <td className="py-3 px-4"><span className={`px-2 py-1 rounded-full text-xs font-medium ${d.status === "active" ? "bg-green-500/10 text-green-600" : "bg-muted text-muted-foreground"}`}>{d.status}</span></td>
+                          <td className="py-3 px-4 text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical size={16} /></Button></DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleEdit(d)} className="gap-2"><Edit size={14} /> Edit</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDelete(d.id)} className="gap-2 text-destructive"><Trash2 size={14} /> Delete</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </td>
+                        </tr>
+                      ))}
+                      {filtered.length === 0 && (
+                        <tr><td colSpan={9} className="py-12 text-center text-muted-foreground">No developers found.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
       </main>
 
-      {/* Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -356,25 +342,42 @@ const AdminDevelopers = () => {
               <Label>Certifications (comma separated)</Label>
               <Input value={formData.certifications} onChange={(e) => setFormData({ ...formData, certifications: e.target.value })} placeholder="AWS Certified, Google Cloud Pro" />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Categories (comma separated slugs: react, nodejs, python...)</Label>
+              <Input value={formData.categories} onChange={(e) => setFormData({ ...formData, categories: e.target.value })} placeholder="frontend, react, nodejs" />
+            </div>
+            <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label>Education</Label>
                 <Input value={formData.education} onChange={(e) => setFormData({ ...formData, education: e.target.value })} placeholder="B.Tech CSE, IIT Delhi" />
               </div>
               <div className="space-y-2">
                 <Label>Status</Label>
-                <Select value={formData.status} onValueChange={(v: "Active" | "Inactive") => setFormData({ ...formData, status: v })}>
+                <Select value={formData.status} onValueChange={(v: "active" | "inactive") => setFormData({ ...formData, status: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Inactive">Inactive</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Featured</Label>
+                <Select value={formData.featured ? "yes" : "no"} onValueChange={(v) => setFormData({ ...formData, featured: v === "yes" })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="no">No</SelectItem>
+                    <SelectItem value="yes">Yes</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-              <Button onClick={handleSubmit}>{editing ? "Save Changes" : "Add Developer"}</Button>
+              <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={saving}>Cancel</Button>
+              <Button onClick={handleSubmit} disabled={saving}>
+                {saving && <Loader2 className="animate-spin mr-2" size={14} />}
+                {editing ? "Save Changes" : "Add Developer"}
+              </Button>
             </div>
           </div>
         </DialogContent>

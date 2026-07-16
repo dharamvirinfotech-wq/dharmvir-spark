@@ -16,6 +16,7 @@ const userRoutes = require('./routes/user.routes');
 const contactRoutes = require('./routes/contact.routes');
 const expertRoutes = require('./routes/expert.routes');
 const hireRoutes = require('./routes/hire.routes');
+const developerRoutes = require('./routes/developer.routes');
 const { notFound, errorHandler } = require('./middleware/error');
 const { testConnection } = require('./db/pool');
 const { configurePassport } = require('./auth/passport');
@@ -62,6 +63,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/experts', expertRoutes);
 app.use('/api/hire', hireRoutes);
+app.use('/api/developers', developerRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -3,86 +3,29 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import PageBanner from "@/components/PageBanner";
 import Footer from "@/components/Footer";
-import { Star, MapPin, Briefcase, DollarSign, CheckCircle, Clock, Globe, Award, Send } from "lucide-react";
+import { Star, MapPin, Briefcase, DollarSign, CheckCircle, Clock, Award, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { hireApi } from "@/lib/api";
-
-interface DeveloperData {
-  name: string;
-  role: string;
-  experience: string;
-  hourlyRate: string;
-  rating: number;
-  location: string;
-  avatar: string;
-  skills: string[];
-  bio: string;
-  languages: string[];
-  availability: string;
-  projectsCompleted: number;
-  certifications: string[];
-  education: string;
-}
-
-const developerDatabase: Record<string, DeveloperData[]> = {};
-
-const defaultDevelopers: Record<string, DeveloperData> = {
-  "rahul-sharma": {
-    name: "Rahul Sharma", role: "Developer", experience: "8+ Years", hourlyRate: "$25-35", rating: 4.9,
-    location: "Bangalore, India", avatar: "RS", skills: ["Team Lead", "Architecture", "Mentoring", "Code Review", "System Design"],
-    bio: "Passionate senior developer with 8+ years of experience building scalable applications. Expertise in leading teams, designing architectures, and mentoring junior developers. Has delivered 50+ projects for clients across US, UK, and Europe.",
-    languages: ["English (Fluent)", "Hindi (Native)"], availability: "Full-time / Part-time",
-    projectsCompleted: 54, certifications: ["AWS Certified Solutions Architect", "Google Cloud Professional"],
-    education: "B.Tech Computer Science, IIT Delhi"
-  },
-  "priya-patel": {
-    name: "Priya Patel", role: "Developer", experience: "6+ Years", hourlyRate: "$20-30", rating: 4.8,
-    location: "Pune, India", avatar: "PP", skills: ["UI/UX", "Performance", "Testing", "Responsive Design", "Accessibility"],
-    bio: "Detail-oriented developer with 6+ years specializing in creating beautiful, performant user interfaces. Strong focus on accessibility, testing, and user experience optimization.",
-    languages: ["English (Fluent)", "Hindi (Native)", "Gujarati"], availability: "Full-time",
-    projectsCompleted: 42, certifications: ["Meta Front-End Developer Certificate", "Certified Scrum Developer"],
-    education: "M.Tech Software Engineering, BITS Pilani"
-  },
-  "amit-kumar": {
-    name: "Amit Kumar", role: "Developer", experience: "5+ Years", hourlyRate: "$18-25", rating: 4.7,
-    location: "Hyderabad, India", avatar: "AK", skills: ["API Design", "Database", "Security", "Microservices", "Docker"],
-    bio: "Backend-focused developer with 5+ years of experience in building robust APIs, optimizing databases, and implementing security best practices across enterprise applications.",
-    languages: ["English (Fluent)", "Hindi (Native)", "Telugu"], availability: "Full-time / Contract",
-    projectsCompleted: 38, certifications: ["Certified Kubernetes Administrator", "MongoDB Certified Developer"],
-    education: "B.Tech IT, IIIT Hyderabad"
-  },
-  "sneha-reddy": {
-    name: "Sneha Reddy", role: "Developer", experience: "7+ Years", hourlyRate: "$22-32", rating: 4.9,
-    location: "Chennai, India", avatar: "SR", skills: ["Full Stack", "DevOps", "Agile", "CI/CD", "Cloud Architecture"],
-    bio: "Versatile full-stack developer with 7+ years building end-to-end solutions. Strong DevOps background with expertise in CI/CD pipelines, cloud infrastructure, and agile methodologies.",
-    languages: ["English (Fluent)", "Hindi", "Tamil (Native)"], availability: "Full-time",
-    projectsCompleted: 47, certifications: ["AWS DevOps Professional", "Certified SAFe Practitioner"],
-    education: "M.Sc Computer Science, Anna University"
-  },
-  "vikram-singh": {
-    name: "Vikram Singh", role: "Developer", experience: "4+ Years", hourlyRate: "$15-22", rating: 4.6,
-    location: "Noida, India", avatar: "VS", skills: ["Frontend", "Mobile", "CI/CD", "React Native", "Flutter"],
-    bio: "Energetic developer with 4+ years specializing in frontend and mobile development. Experienced in cross-platform app development with React Native and Flutter.",
-    languages: ["English (Fluent)", "Hindi (Native)"], availability: "Full-time / Part-time",
-    projectsCompleted: 29, certifications: ["Google Associate Android Developer", "React Developer Certificate"],
-    education: "B.Tech CSE, DTU Delhi"
-  },
-  "ananya-gupta": {
-    name: "Ananya Gupta", role: "Developer", experience: "9+ Years", hourlyRate: "$28-40", rating: 5.0,
-    location: "Mumbai, India", avatar: "AG", skills: ["Enterprise", "Cloud", "Strategy", "Technical Leadership", "Architecture"],
-    bio: "Senior technical leader with 9+ years of experience delivering enterprise-grade solutions. Expert in cloud architecture, technical strategy, and building high-performing development teams.",
-    languages: ["English (Fluent)", "Hindi (Native)", "Marathi"], availability: "Full-time / Advisory",
-    projectsCompleted: 63, certifications: ["AWS Solutions Architect Professional", "Azure Solutions Architect Expert", "PMP Certified"],
-    education: "M.Tech Computer Science, IIT Bombay"
-  },
-};
+import { hireApi, developersApi, type Developer } from "@/lib/api";
 
 const DeveloperProfile = () => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
-  const role = searchParams.get("role") || "Developer";
+  const roleOverride = searchParams.get("role");
 
-  const dev = slug ? defaultDevelopers[slug] : null;
+  const [dev, setDev] = useState<Developer | null>(null);
+  const [loadingDev, setLoadingDev] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (!slug) return;
+    setLoadingDev(true);
+    setNotFound(false);
+    developersApi
+      .get(slug)
+      .then((r) => setDev(r.developer))
+      .catch(() => setNotFound(true))
+      .finally(() => setLoadingDev(false));
+  }, [slug]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -98,7 +41,6 @@ const DeveloperProfile = () => {
   const [geo, setGeo] = useState<{ latitude: number; longitude: number; accuracy: number; address?: string | null } | null>(null);
   const [geoStatus, setGeoStatus] = useState<"idle" | "loading" | "ready" | "denied" | "unsupported">("idle");
 
-  // Request live location on mount (non-blocking)
   useEffect(() => {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
       setGeoStatus("unsupported");
@@ -118,7 +60,7 @@ const DeveloperProfile = () => {
             const j = await r.json();
             address = (j?.display_name as string) || null;
           }
-        } catch { /* ignore reverse-geocode errors */ }
+        } catch { /* ignore */ }
         setGeo({ latitude, longitude, accuracy, address });
         setGeoStatus("ready");
       },
@@ -127,7 +69,19 @@ const DeveloperProfile = () => {
     );
   }, []);
 
-  if (!dev) {
+  if (loadingDev) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container mx-auto px-4 py-32 flex items-center justify-center">
+          <Loader2 className="animate-spin text-accent" size={32} />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (notFound || !dev) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -143,7 +97,8 @@ const DeveloperProfile = () => {
     );
   }
 
-  const devWithRole = { ...dev, role };
+  const devWithRole = { ...dev, role: roleOverride || dev.role };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
